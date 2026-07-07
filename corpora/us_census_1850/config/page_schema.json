@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CensusPageTranscription",
+  "type": "object",
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "page_number": { "type": ["string", "null"] },
+        "location_county": { "type": "string" },
+        "location_town": { "type": "string" },
+        "enumeration_date": { "type": ["string", "null"] },
+        "assistant_marshal": { "type": ["string", "null"] }
+      },
+      "required": ["location_county", "location_town"]
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "line_number": { "type": "string" },
+          "dwelling_number": { "type": ["string", "null"] },
+          "family_number": { "type": ["string", "null"] },
+          "raw_name": { "type": "string" },
+          "interpreted_first_name": { "type": "string" },
+          "interpreted_last_name": {
+            "type": "string",
+            "description": "Output the surname. If the row uses ditto marks or leaves the surname blank for a family member living in the same household, strictly output the literal string '[DITTO]'. Do not attempt to guess or resolve the name."
+          },
+          "age": { "type": ["string", "null"] },
+          "sex": { "type": ["string", "null"] },
+          "color": { "type": ["string", "null"] },
+          "occupation": { "type": ["string", "null"] },
+          "real_estate_value": { "type": ["string", "null"] },
+          "place_of_birth": { "type": ["string", "null"] },
+          "married_within_year": {
+            "type": ["string", "null"],
+            "description": "Column 10: Married within the year. Capture any mark, slash, or character present; otherwise null."
+          },
+          "attended_school": {
+            "type": ["string", "null"],
+            "description": "Column 11: Attended school within the year. Capture any mark, slash, or character present; otherwise null."
+          },
+          "cannot_read_write": {
+            "type": ["string", "null"],
+            "description": "Column 12: Persons over 20 y'rs of age who cannot read & write. Capture any mark or character present; otherwise null."
+          },
+          "infirmities": {
+            "type": ["string", "null"],
+            "description": "Column 13: Whether deaf, dumb, blind, insane, idiotic, pauper, or convict. Capture the written description exactly; otherwise null."
+          },
+          "confidence_score": {
+            "type": "string",
+            "enum": ["HIGH", "MEDIUM", "LOW"]
+          },
+          "transcription_notes": {
+            "type": ["string", "null"],
+            "description": "If you mark a row's confidence_score as 'MEDIUM' or 'LOW', you must explicitly state which field(s) (e.g., age, occupation, or name) are uncertain inside this field."
+          }
+        },
+        "required": [
+          "line_number",
+          "raw_name",
+          "interpreted_first_name",
+          "interpreted_last_name",
+          "age",
+          "sex",
+          "confidence_score"
+        ]
+      }
+    }
+  },
+  "required": ["metadata", "rows"]
+}

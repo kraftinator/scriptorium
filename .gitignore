@@ -1,0 +1,14 @@
+# Generated data & outputs — regenerable, never in git
+corpora/*/data/reels/
+corpora/*/data/pages/
+corpora/*/data/crops/
+corpora/*/output/
+
+# Python / venv
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+.DS_Store

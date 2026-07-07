@@ -1,0 +1,14 @@
+# Claude backend: no Python packages — shells out to the `claude` CLI.
+# Gemini backend: needs google-genai (installed in the project venv, .venv/).
+#
+# Setup:
+#   python3 -m venv .venv
+#   .venv/bin/pip install -r requirements.txt
+# Run (use the venv python so the gemini backend can import google-genai):
+#   .venv/bin/python src/transcribe.py --corpus corpora/us_census_1850 \
+#       --reel populationschedu0604unix --frame 23 --agent gemini
+#
+# Also required: macOS `sips` (JP2->JPG), the `claude` CLI (claude backend),
+# and GEMINI_API_KEY in the environment (gemini backend).
+
+google-genai>=2.10
