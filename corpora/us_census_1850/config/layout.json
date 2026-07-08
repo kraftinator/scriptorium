@@ -1,0 +1,8 @@
+{
+  "_comment": "Row geometry of the pre-printed 1850 schedule form, in pixels of the full-resolution page image. Calibrated on reel populationschedu0604unix (6568x8424) and validated against the printed margin line numbers (line 38 = the Ira Knickerbocker row). row1_top = y of the top of line 1; row_pitch = height of one ruled row; band_rows = rows per tile; crop_margin = px of slack added above/below each band so edge rows are not clipped (the model is told to ignore slivers). These are per-form constants; other reels/scans may need re-calibration.",
+  "n_rows": 42,
+  "row1_top": 1620,
+  "row_pitch": 150,
+  "band_rows": 6,
+  "crop_margin": 80
+}

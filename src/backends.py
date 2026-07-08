@@ -8,11 +8,15 @@ never changes.
 from __future__ import annotations
 
 import json
+import os
 import subprocess
+import time
 from pathlib import Path
 
 CLAUDE_MODEL = "claude-opus-4-8"
-GEMINI_MODEL = "gemini-2.5-flash"  # pro is not on the free tier (limit 0); flash has free quota
+# Gemini model is overridable via env so we can flip Flash <-> Pro without a code
+# edit, e.g. `GEMINI_MODEL=gemini-2.5-pro`. Pro needs a billed key (free tier = 0).
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
 
 
 def _minify(schema: dict) -> str:
@@ -21,10 +25,15 @@ def _minify(schema: dict) -> str:
 
 
 def _strip_fence(text: str) -> str:
-    """Remove a stray ```json fence if a model wraps output despite instructions."""
-    if text.startswith("```"):
-        text = text.split("\n", 1)[1] if "\n" in text else text
-        text = text.rsplit("```", 1)[0].strip()
+    """Extract the JSON object from a model reply, tolerating markdown fences AND
+    any conversational preamble/postamble (e.g. Claude's "Based on my reading:
+    ```json ... ```"). The JSON object is the span from the first '{' to the
+    last '}'; prose around it has no braces.
+    """
+    text = text.strip()
+    i, j = text.find("{"), text.rfind("}")
+    if i != -1 and j > i:
+        return text[i:j + 1]
     return text
 
 
@@ -40,19 +49,24 @@ def claude_backend(jpg: Path, prompt: str, schema: dict) -> dict:
         f"Read the census page image at:\n{jpg}\n\n"
         f"Conform the output exactly to this JSON schema:\n{_minify(schema)}"
     )
-    result = subprocess.run(
-        ["claude", "-p", full, "--model", CLAUDE_MODEL,
-         "--allowedTools", "Read", "--strict-mcp-config"],
-        capture_output=True,
-        text=True,
-    )
-    text = result.stdout.strip()
-    if result.returncode != 0 or not text:
-        raise RuntimeError(
-            f"claude CLI failed (exit {result.returncode}); empty={not text}; "
-            f"stderr:\n{result.stderr.strip()[:2000]}"
+    last = ""
+    for attempt in range(3):  # the CLI occasionally returns empty/partial output
+        result = subprocess.run(
+            ["claude", "-p", full, "--model", CLAUDE_MODEL,
+             "--allowedTools", "Read", "--strict-mcp-config"],
+            capture_output=True,
+            text=True,
         )
-    return json.loads(_strip_fence(text))
+        text = _strip_fence(result.stdout.strip())
+        if result.returncode == 0 and text:
+            try:
+                return json.loads(text)
+            except json.JSONDecodeError:
+                last = "invalid JSON from CLI"
+        else:
+            last = f"exit {result.returncode}, empty={not text}"
+        time.sleep(2 ** attempt)
+    raise RuntimeError(f"claude CLI failed after 3 attempts: {last}")
 
 
 def to_gemini_schema(node):
@@ -97,22 +111,40 @@ def gemini_backend(jpg: Path, prompt: str, schema: dict) -> dict:
     """
     from google import genai
     from google.genai import types
+    from google.genai import errors as genai_errors
 
     client = genai.Client()  # reads GEMINI_API_KEY / GOOGLE_API_KEY from env
-    response = client.models.generate_content(
-        model=GEMINI_MODEL,
-        contents=[
-            types.Part.from_bytes(data=jpg.read_bytes(), mime_type="image/jpeg"),
-            "Transcribe this 1850 census page completely according to your "
-            "system instructions.",
-        ],
-        config=types.GenerateContentConfig(
+    mime = "image/png" if jpg.suffix.lower() == ".png" else "image/jpeg"
+    if os.environ.get("GEMINI_NO_SCHEMA"):
+        # Free-form JSON: schema is described in the prompt, not natively enforced.
+        # Lets the model reason (alphabet audit, candidate weighing) before emitting,
+        # instead of being constrained straight into schema-shaped tokens.
+        sys_prompt = (prompt + "\n\nConform your output exactly to this JSON "
+                      f"schema:\n{_minify(schema)}")
+        cfg = types.GenerateContentConfig(
+            system_instruction=sys_prompt, temperature=0.0,
+            response_mime_type="application/json")
+    else:
+        cfg = types.GenerateContentConfig(
             system_instruction=prompt,
             temperature=0.0,
             response_mime_type="application/json",
             response_schema=to_gemini_schema(schema),
-        ),
-    )
+        )
+    contents = [
+        types.Part.from_bytes(data=jpg.read_bytes(), mime_type=mime),
+        "Transcribe this image according to your system instructions.",
+    ]
+    for attempt in range(6):  # backoff on transient overload / rate limits
+        try:
+            response = client.models.generate_content(
+                model=GEMINI_MODEL, contents=contents, config=cfg)
+            break
+        except (genai_errors.ServerError, genai_errors.ClientError) as e:
+            if getattr(e, "code", None) in (429, 500, 503) and attempt < 5:
+                time.sleep(2 ** attempt)
+                continue
+            raise
     text = (response.text or "").strip()
     if not text:
         raise RuntimeError("gemini returned empty output")
