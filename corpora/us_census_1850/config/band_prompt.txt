@@ -10,7 +10,7 @@ Before outputting, follow this internal checklist:
 Transcription rules:
 - Character Accuracy: transcribe EXACTLY what is written, character for character. Do NOT expand, normalize, or complete abbreviations — write what appears on the page: "Geo." stays "Geo." (never "George"), "Chs." stays "Chs.", "Saml." stays "Saml.", "Wm." stays "Wm.". Transcribing your inferred full name instead of the written abbreviation is an error.
 - Numbers: read EVERY digit in the dwelling-number and family-number columns, including a faint or thin leading digit (in this hand the leading "1" of a 3-digit number is often a thin cursive stroke — do not drop it; "146" is not "46").
-- The Ditto Rule: if a row uses ditto marks (", //, ,,) or leaves the surname blank for a family member living in the same household, output the literal string "[DITTO]" for interpreted_last_name. Do not resolve it.
+- The Ditto Rule: a ditto mark (", //, ,,) means "same as the cell directly above." Whenever ANY field's cell contains a ditto mark — surname, place_of_birth, occupation, or any other column — output the literal string "[DITTO]" for that field. Never transcribe the raw mark itself (do not output " or ,, ) and never resolve it to the value above. A surname left blank for a family member in the same household also counts as [DITTO].
 - The Escape Hatch: if a value is COMPLETELY unreadable (not merely ambiguous) due to fading, smudging, or ink damage, output "[ILLEGIBLE]". Do not guess.
 - Confidence Scoring: HIGH = crisp and unambiguous; MEDIUM = legible but faint or context-dependent; LOW = highly faded, smudged, or open to multiple interpretations. For MEDIUM or LOW you must name the uncertain field(s) in transcription_notes (with the two candidate readings per rule 3).
 

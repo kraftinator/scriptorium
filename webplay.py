@@ -21,9 +21,19 @@ from PIL import Image
 
 app = Flask(__name__)
 CORPUS = Path("corpora/us_census_1850")
-DEFAULT_IMAGE = str(
-    CORPUS / "data/reels/populationschedu0604unix/populationschedu0604unix_0023.png"
-)
+REEL = "populationschedu0604unix"
+OUT = CORPUS / "output" / "rows" / REEL
+DEFAULT_IMAGE = str(CORPUS / f"data/reels/{REEL}/{REEL}_0023.png")
+
+# (field, short column header) for the output table
+VIEW_COLS = [
+    ("dwelling_number", "Dw"), ("family_number", "Fam"),
+    ("interpreted_first_name", "First"), ("interpreted_last_name", "Last"),
+    ("age", "Age"), ("sex", "Sex"), ("color", "Clr"), ("occupation", "Occupation"),
+    ("real_estate_value", "R.Est"), ("place_of_birth", "Birthplace"),
+    ("married_within_year", "Mar"), ("attended_school", "Sch"),
+    ("cannot_read_write", "R/W"), ("infirmities", "Infirm"),
+]
 
 PAGE = """<!doctype html><html><head><meta charset=utf-8><title>Gemini Playground</title>
 <style>
@@ -38,6 +48,7 @@ PAGE = """<!doctype html><html><head><meta charset=utf-8><title>Gemini Playgroun
  @keyframes spin{{to{{transform:rotate(360deg)}}}}
 </style></head><body>
 <h1>Gemini Playground &mdash; 1850 Census</h1>
+<p><a href="/view">View transcribed output &rarr;</a></p>
 <form method=post>
  <div class=row>
   <div><label>Model</label><select name=model>{model_opts}</select></div>
@@ -145,6 +156,89 @@ def index():
         json_checked="checked" if f.get("json_mode") else "",
         result=result,
     )
+
+
+VIEW_CSS = """<style>
+ body{font-family:system-ui,sans-serif;margin:20px;color:#222}
+ .wrap{max-width:1500px;margin:0 auto}
+ h1{font-size:20px} .meta{color:#666;font-size:13px}
+ .nav a{margin-right:10px;font-weight:600} .nav a.on{text-decoration:none;color:#000;background:#eee;padding:1px 6px;border-radius:4px}
+ .tablewrap{overflow-x:auto;border:1px solid #eee;border-radius:6px}
+ table{border-collapse:collapse;width:100%;font-size:13px}
+ th,td{border:1px solid #e2e2e2;padding:4px 7px;text-align:left;vertical-align:top;white-space:nowrap}
+ th{background:#f0ece3;position:sticky;top:0}
+ td.ln{font-weight:600} td.conflict{background:#fff3cd} tr.review{background:#fcfbf6}
+ .conflict b{color:#9a5b00;font-weight:600} .miss{color:#b00;font-weight:normal;font-size:11px}
+ .legend span{margin-right:14px}
+</style>"""
+
+
+def list_frames():
+    if not OUT.exists():
+        return []
+    return sorted({p.name.split("_")[-1].split(".")[0]
+                   for p in OUT.glob(f"{REEL}_*.consensus.json")})
+
+
+def _cell(row, field):
+    conflicts = row.get("conflicts", {})
+    if field in conflicts:
+        c = conflicts[field]
+        inner = " / ".join(
+            f'<b>{a[0].upper()}:</b>&nbsp;{html.escape(str(c.get(a)) if c.get(a) not in (None, "") else "—")}'
+            for a in c)
+        return f'<td class=conflict>{inner}</td>'
+    v = row.get(field)
+    return f'<td>{html.escape(str(v)) if v not in (None, "") else ""}</td>'
+
+
+def render_view(frame):
+    p = OUT / f"{REEL}_{int(frame):04d}.consensus.json"
+    if not p.exists():
+        return f"<p>No consensus file for frame {frame} yet.</p>"
+    d = json.loads(p.read_text())
+    s, m = d.get("summary", {}), d.get("metadata", {})
+    head = (f"<h2>Frame {int(frame):04d} &mdash; {html.escape(str(m.get('location_town') or '?'))}, "
+            f"{html.escape(str(m.get('location_county') or '?'))} County</h2>"
+            f"<p class=meta>Consensus of {', '.join(d.get('agents', []))} &middot; "
+            f"cell agreement {s.get('cells_agree')}/{s.get('cells_total')} "
+            f"(<b>{s.get('cell_agreement_pct')}%</b>) &middot; "
+            f"{s.get('rows_with_conflict')} rows need review</p>"
+            "<p class='meta legend'><span>✓ = all cells agree</span>"
+            "<span>⚑ = has a flagged cell</span>"
+            "<span style='background:#fff3cd;padding:0 4px'>yellow = conflict (C: Claude / G: Gemini)</span></p>")
+    ths = "".join(f"<th>{lbl}</th>" for _, lbl in VIEW_COLS)
+    trs = ""
+    for row in d["rows"]:
+        conf = row.get("confidence", "")
+        rc = row.get("conflicts", {})
+        note = ""
+        if "_row" in rc:
+            present = [a for a, v in rc["_row"].items() if v == "present"]
+            note = f" <span class=miss>(only {', '.join(present)})</span>"
+        badge = "✓" if conf == "HIGH" else "⚑"
+        tds = "".join(_cell(row, f) for f, _ in VIEW_COLS)
+        cls = "" if conf == "HIGH" else " class=review"
+        trs += f'<tr{cls}><td class=ln>{row["line_number"]} {badge}{note}</td>{tds}</tr>'
+    return (head + f'<div class=tablewrap><table><thead><tr><th>Ln</th>{ths}</tr>'
+            f'</thead><tbody>{trs}</tbody></table></div>')
+
+
+@app.route("/view")
+@app.route("/view/<int:frame>")
+def view(frame=None):
+    frames = list_frames()
+    if not frames:
+        return VIEW_CSS + "<div class=wrap><h1>Scriptorium Output</h1><p>No consensus files found. Run the pipeline + reconcile first.</p><p><a href='/'>&larr; API playground</a></p></div>"
+    if frame is None:
+        frame = int(frames[0])
+    nav = " ".join(
+        f'<a class="{"on" if int(fr) == int(frame) else ""}" href="/view/{int(fr)}">{fr}</a>'
+        for fr in frames)
+    body = render_view(frame)
+    return (VIEW_CSS + "<div class=wrap><h1>Scriptorium Output</h1>"
+            "<p><a href='/'>&larr; API playground</a></p>"
+            f"<p class=nav>Pages: {nav}</p>{body}</div>")
 
 
 if __name__ == "__main__":
