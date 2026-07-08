@@ -25,11 +25,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from backends import REGISTRY  # noqa: E402
 
 META_PROMPT = (
-    "The attached image is the printed HEADER of an 1850 U.S. Census population "
-    "schedule (the top banner, above the data rows). Read only the header and "
-    "return the metadata fields: page_number, location_county, location_town, "
-    "enumeration_date, assistant_marshal. Return an empty rows array. Output "
-    "strictly valid JSON matching the schema."
+    "The attached image is the printed TITLE BANNER at the very top of an 1850 "
+    "U.S. Census population schedule. It reads: 'SCHEDULE 1.—Free Inhabitants in "
+    "[town], in the County of [county], State of [state], enumerated by me on the "
+    "[day] day of [month], 1850, ... Ass't Marshal.', with the bracketed parts "
+    "handwritten. Read those handwritten fills and return: location_town (just the "
+    "place name, e.g. 'Barton'), location_county (e.g. 'Tioga'), and "
+    "enumeration_date. Set page_number and assistant_marshal to null — they are "
+    "not in this crop. Return an empty rows array. Output strictly valid JSON "
+    "matching the schema."
 )
 
 
@@ -44,6 +48,8 @@ def transcribe_tiled(page_img: Path, agent: str, corpus: Path, scratch: Path) ->
     n_rows = layout["n_rows"]
     band_rows = layout["band_rows"]
     margin = layout.get("crop_margin", 0)
+    header_top = layout.get("header_top", 0)
+    header_bottom = layout.get("header_bottom", top)
 
     img = Image.open(page_img)
     W, H = img.size
@@ -53,7 +59,7 @@ def transcribe_tiled(page_img: Path, agent: str, corpus: Path, scratch: Path) ->
     # --- metadata from the header strip (higher res than the full page) ---
     try:
         hp = scratch / f"{stem}_header.png"
-        img.crop((0, 0, W, top)).save(hp)
+        img.crop((0, header_top, W, header_bottom)).save(hp)
         metadata = backend(hp, META_PROMPT, schema).get("metadata", {})
     except Exception as e:  # metadata is non-fatal; rows are the point
         print(f"  [tile] header/metadata failed: {e}", file=sys.stderr)

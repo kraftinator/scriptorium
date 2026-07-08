@@ -4,5 +4,7 @@
   "row1_top": 1620,
   "row_pitch": 150,
   "band_rows": 6,
-  "crop_margin": 80
+  "crop_margin": 80,
+  "header_top": 0,
+  "header_bottom": 1050
 }
