@@ -14,9 +14,11 @@ import time
 from pathlib import Path
 
 CLAUDE_MODEL = "claude-opus-4-8"
-# Gemini model is overridable via env so we can flip Flash <-> Pro without a code
-# edit, e.g. `GEMINI_MODEL=gemini-2.5-pro`. Pro needs a billed key (free tier = 0).
-GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+# Gemini model is pinned (not the -latest alias) so the corpus stays consistent:
+# every page is read by a known model. Overridable via env to flip Flash <-> Pro,
+# e.g. `GEMINI_MODEL=gemini-pro-latest`. NOTE: Google retires old IDs (the whole
+# 2.x Flash line 404s as of 2026-07); bump this deliberately + re-validate a page.
+GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash")
 
 
 def _minify(schema: dict) -> str:

@@ -81,7 +81,7 @@ document.querySelector('form').addEventListener('submit',function(){{
 
 def model_options(selected):
     opts = ""
-    for m in ("gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash"):
+    for m in ("gemini-3.5-flash", "gemini-flash-latest", "gemini-pro-latest"):
         sel = " selected" if m == selected else ""
         opts += f'<option value="{m}"{sel}>{m}</option>'
     return opts
