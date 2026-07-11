@@ -128,6 +128,15 @@ def openrebut_prompt(label, other_name, other_arg):
             "(HIGH/MEDIUM/LOW), reasoning (1 sentence). No prose outside the JSON.")
 
 
+def openread_prompt(label):
+    return (f"Read the {label} written in this image — a single handwritten name "
+            "from an 1850 U.S. Census. What does it say? Transcribe the EXACT "
+            "letters as written (do not prefer a more familiar or common name), "
+            "and INCLUDE any middle initial written as part of a given name "
+            "(e.g. 'Milo J.', not just 'Milo'). Return JSON: name, confidence "
+            "(HIGH/MEDIUM/LOW). No prose outside the JSON.")
+
+
 def _conf(vals):
     """Derived confidence: LOW if any voter is unsure, HIGH only if all sure."""
     vals = [str(v).upper() for v in vals if v]
@@ -138,25 +147,58 @@ def _conf(vals):
     return "MEDIUM"
 
 
-def adjudicate_name(crop: Path, label: str, cand_c, cand_g) -> dict:
-    """Run the tier ladder on one disputed name field. Returns a resolution dict."""
+def adjudicate_name_v1(crop: Path, label: str, cand_c, cand_g) -> dict:
+    """V1 (original): show both candidates, then a FREE re-read debate — each
+    proposes any reading with an argument and can be persuaded (may drift to a
+    third reading). Full-row crop. Got Mary A. right by drift; missed Chls/Hulett.
+    """
     base = {"claude": cand_c, "gemini": cand_g}
-
-    # --- Tier 1: bare-answer nudge (show both candidates, each re-decides) ---
     try:
         c1 = claude_backend(crop, nudge_prompt(label, cand_c, cand_g), NUDGE_SCHEMA)
         g1 = gemini_backend(crop, nudge_prompt(label, cand_c, cand_g), NUDGE_SCHEMA)
-    except Exception as e:  # a call died -> fall back to Claude's original reading
+    except Exception as e:
+        return {**base, "value": cand_c, "confidence": "LOW", "tier": "error",
+                "rationale": f"adjudication call failed: {e}"}
+    if norm(c1.get("name")) == norm(g1.get("name")):
+        return {**base, "value": c1.get("name"), "tier": "tier1", "rationale": None,
+                "confidence": _conf([c1.get("confidence"), g1.get("confidence")])}
+    try:
+        oa = claude_backend(crop, openarg_prompt(label, cand_c, cand_g), OPENARG_SCHEMA)
+        ob = gemini_backend(crop, openarg_prompt(label, cand_c, cand_g), OPENARG_SCHEMA)
+        na, nb = oa.get("name"), ob.get("name")
+        if norm(na) == norm(nb):
+            return {**base, "value": na, "tier": "debate", "rationale": oa.get("argument"),
+                    "confidence": _conf([oa.get("confidence"), ob.get("confidence")])}
+        rg = gemini_backend(crop, openrebut_prompt(label, na, oa.get("argument")), OPENREBUT_SCHEMA)
+        if norm(rg.get("final_name")) == norm(na):
+            return {**base, "value": na, "tier": "debate", "rationale": oa.get("argument"),
+                    "confidence": _conf([oa.get("confidence"), rg.get("confidence")])}
+        rc = claude_backend(crop, openrebut_prompt(label, nb, ob.get("argument")), OPENREBUT_SCHEMA)
+        if norm(rc.get("final_name")) == norm(nb):
+            return {**base, "value": nb, "tier": "debate", "rationale": ob.get("argument"),
+                    "confidence": _conf([ob.get("confidence"), rc.get("confidence")])}
+    except Exception:
+        pass
+    return {**base, "value": cand_c, "confidence": "LOW", "tier": "tier3",
+            "rationale": "unresolved after debate; defaulted to Claude"}
+
+
+def adjudicate_name_v2(crop: Path, label: str, cand_c, cand_g) -> dict:
+    """V2 (committed): show both candidates; ANCHORED debate — each defends its
+    candidate, then both pick one of the two (no invented third reading); on
+    deadlock an open persuasion round (LOW); else Claude+LOW. Full-row crop.
+    """
+    base = {"claude": cand_c, "gemini": cand_g}
+    try:
+        c1 = claude_backend(crop, nudge_prompt(label, cand_c, cand_g), NUDGE_SCHEMA)
+        g1 = gemini_backend(crop, nudge_prompt(label, cand_c, cand_g), NUDGE_SCHEMA)
+    except Exception as e:
         return {**base, "value": cand_c, "confidence": "LOW", "tier": "error",
                 "rationale": f"adjudication call failed: {e}"}
     cn, gn = c1.get("name"), g1.get("name")
-    if norm(cn) == norm(gn):  # converged on the second look
+    if norm(cn) == norm(gn):
         return {**base, "value": cn, "tier": "tier1", "rationale": None,
                 "confidence": _conf([c1.get("confidence"), g1.get("confidence")])}
-
-    # --- Tier 2: anchored debate. Each DEFENDS its own candidate, then each
-    # chooses between the two candidates — no free re-read, so no invented third
-    # reading — and the derived confidence honors any voter's uncertainty. ---
     try:
         da = claude_backend(crop, defend_prompt(label, cand_c, cand_g), DEFEND_SCHEMA)
         db = gemini_backend(crop, defend_prompt(label, cand_g, cand_c), DEFEND_SCHEMA)
@@ -171,42 +213,65 @@ def adjudicate_name(crop: Path, label: str, cand_c, cand_g) -> dict:
                 return cand_g
             return None
         pc, pg = pick(dc.get("final_name")), pick(dg.get("final_name"))
-        if pc is not None and pc == pg:  # both chose the same candidate
+        if pc is not None and pc == pg:
             rationale = da["argument"] if pc == cand_c else db["argument"]
             return {**base, "value": pc, "tier": "tier2", "rationale": rationale,
                     "confidence": _conf([dc.get("confidence"), dg.get("confidence")])}
 
-        # Anchored round deadlocked -> neither candidate won, the signal that
-        # neither may be right. Restore the OPEN persuasion debate: each proposes a
-        # reading (any name) with an argument, then each can be persuaded by the
-        # other. This is what recovers a correct third reading (e.g. "Mary A." when
-        # both candidates are wrong). Short-circuits once they converge.
-        # Confidence is forced to LOW for ANY open-round result: it only fires on a
-        # true deadlock (both candidates already failed), i.e. the hardest cells,
-        # so even a converged answer is inherently uncertain and must be labelled
-        # so — this keeps third-reading recoveries while flagging them honestly.
         oa = claude_backend(crop, openarg_prompt(label, cand_c, cand_g), OPENARG_SCHEMA)
         ob = gemini_backend(crop, openarg_prompt(label, cand_c, cand_g), OPENARG_SCHEMA)
         na, nb = oa.get("name"), ob.get("name")
-        if norm(na) == norm(nb):  # both independently proposed the same reading
+        if norm(na) == norm(nb):
             return {**base, "value": na, "tier": "tier2-open", "confidence": "LOW",
                     "rationale": oa.get("argument")}
-        # Gemini re-examines Claude's argument
         rg = gemini_backend(crop, openrebut_prompt(label, na, oa.get("argument")), OPENREBUT_SCHEMA)
         if norm(rg.get("final_name")) == norm(na):
             return {**base, "value": na, "tier": "tier2-open", "confidence": "LOW",
                     "rationale": oa.get("argument")}
-        # Claude re-examines Gemini's argument
         rc = claude_backend(crop, openrebut_prompt(label, nb, ob.get("argument")), OPENREBUT_SCHEMA)
         if norm(rc.get("final_name")) == norm(nb):
             return {**base, "value": nb, "tier": "tier2-open", "confidence": "LOW",
                     "rationale": ob.get("argument")}
     except Exception:
         pass
-
-    # --- Tier 3: genuine deadlock -> default to Claude's candidate, flag LOW ---
     return {**base, "value": cand_c, "confidence": "LOW", "tier": "tier3",
             "rationale": "unresolved after debate; defaulted to Claude"}
+
+
+def adjudicate_name_v3(crop: Path, label: str, cand_c, cand_g) -> dict:
+    """V3 (experimental): LEAD with an UNBIASED open read (cell crop, NO candidates
+    shown, so the read isn't anchored to the guesses), then reconcile the clean
+    reads: agree -> accept; disagree -> persuasion debate between the open reads;
+    deadlock -> Claude's open read, LOW.
+    """
+    base = {"claude": cand_c, "gemini": cand_g}
+    try:
+        oc = claude_backend(crop, openread_prompt(label), NUDGE_SCHEMA)
+        og = gemini_backend(crop, openread_prompt(label), NUDGE_SCHEMA)
+    except Exception as e:
+        return {**base, "value": cand_c, "confidence": "LOW", "tier": "error",
+                "rationale": f"open-read call failed: {e}"}
+    nc, ng = oc.get("name"), og.get("name")
+    base = {**base, "open_claude": nc, "open_gemini": ng}
+    if norm(nc) == norm(ng):
+        return {**base, "value": nc, "tier": "open-agree", "rationale": None,
+                "confidence": _conf([oc.get("confidence"), og.get("confidence")])}
+    try:
+        da = claude_backend(crop, defend_prompt(label, nc, ng), DEFEND_SCHEMA)
+        db = gemini_backend(crop, defend_prompt(label, ng, nc), DEFEND_SCHEMA)
+        rg = gemini_backend(crop, openrebut_prompt(label, nc, da["argument"]), OPENREBUT_SCHEMA)
+        if norm(rg.get("final_name")) == norm(nc):
+            return {**base, "value": nc, "tier": "open-debate", "rationale": da["argument"],
+                    "confidence": _conf([oc.get("confidence"), rg.get("confidence")])}
+        rc = claude_backend(crop, openrebut_prompt(label, ng, db["argument"]), OPENREBUT_SCHEMA)
+        if norm(rc.get("final_name")) == norm(ng):
+            return {**base, "value": ng, "tier": "open-debate", "rationale": db["argument"],
+                    "confidence": _conf([og.get("confidence"), rc.get("confidence")])}
+    except Exception:
+        pass
+    return {**base, "value": nc, "confidence": "LOW", "tier": "deadlock",
+            "rationale": "open reads disagreed and debate did not converge; "
+                         "defaulted to Claude's open read"}
 
 
 def get_page_png(reel_dir: Path, reel: str, frame: int, scratch: Path) -> Path:
@@ -221,7 +286,26 @@ def get_page_png(reel_dir: Path, reel: str, frame: int, scratch: Path) -> Path:
     return out
 
 
+def crop_name_cell(img: Image.Image, layout: dict, L: int, scratch: Path, stem: str) -> Path:
+    """Crop to the NAME CELL (name column x row), not the full-width row, and
+    upscale. The name is a tiny slice of a wide row; cropping to the cell gives
+    the model the resolution it needs (proven: a full-row crop failed to read an
+    L4 initial that the tight cell crop got right)."""
+    top, pitch = layout["row1_top"], layout["row_pitch"]
+    W, H = img.size
+    y0 = max(0, top + (L - 1) * pitch - 40)
+    y1 = min(H, top + L * pitch + 40)
+    f0, f1 = layout.get("name_col_frac", [0.0, 1.0])  # fraction of width -> pixels
+    x0, x1 = int(f0 * W), int(f1 * W)
+    cell = img.crop((x0, y0, x1, y1))
+    cell = cell.resize((cell.width * 2, cell.height * 2), Image.LANCZOS)
+    p = scratch / f"{stem}_adj_row{L:02d}.png"
+    cell.save(p)
+    return p
+
+
 def crop_row(img: Image.Image, layout: dict, L: int, scratch: Path, stem: str) -> Path:
+    """Crop the FULL-WIDTH row (V1/V2 behaviour — the whole row, all columns)."""
     top, pitch = layout["row1_top"], layout["row_pitch"]
     W, H = img.size
     y0 = max(0, top + (L - 1) * pitch - 40)
@@ -229,6 +313,15 @@ def crop_row(img: Image.Image, layout: dict, L: int, scratch: Path, stem: str) -
     p = scratch / f"{stem}_adj_row{L:02d}.png"
     img.crop((0, y0, W, y1)).save(p)
     return p
+
+
+# strategy -> (crop function, adjudicate function). Swap the whole approach with
+# --strategy so all three stay runnable for side-by-side comparison.
+STRATEGIES = {
+    "v1": (crop_row, adjudicate_name_v1),        # candidates shown, free re-read debate
+    "v2": (crop_row, adjudicate_name_v2),        # candidates shown, anchored debate (committed)
+    "v3": (crop_name_cell, adjudicate_name_v3),  # open-read-first, cell crop
+}
 
 
 def main() -> None:
@@ -239,9 +332,13 @@ def main() -> None:
     ap.add_argument("--agents", nargs="+", default=["claude", "gemini"])
     ap.add_argument("--lines", nargs="*", type=int, default=None,
                     help="only adjudicate these line numbers (for testing)")
+    ap.add_argument("--strategy", choices=list(STRATEGIES), default="v1",
+                    help="adjudication strategy (default v1, the free-debate flow — "
+                         "best on the stability test: 2/3 on Mary A. + honest LOW)")
     args = ap.parse_args()
     if args.agents[:2] != ["claude", "gemini"]:
         sys.exit("adjudicate assumes agents 'claude gemini' (Claude is the Tier-3 default).")
+    crop_fn, adjudicate_fn = STRATEGIES[args.strategy]
 
     corpus = args.corpus.resolve()
     out_dir = corpus / "output" / "rows" / args.reel
@@ -271,7 +368,8 @@ def main() -> None:
     n_names = sum(1 for ln in all_lines if per["claude"].get(ln) and per["gemini"].get(ln)
                   for f in NAME_FIELDS
                   if norm(per["claude"][ln].get(f)) != norm(per["gemini"][ln].get(f)))
-    print(f"[adj] {n_names} name disagreements to resolve", file=sys.stderr, flush=True)
+    print(f"[adj] strategy={args.strategy}: {n_names} name disagreements to resolve",
+          file=sys.stderr, flush=True)
     done_names = 0
     out_rows, resolutions, tally = [], [], {"agree": 0, "tier1": 0, "tier2": 0,
                                             "tier3": 0, "claude-default": 0, "error": 0}
@@ -292,8 +390,8 @@ def main() -> None:
                 tally["agree"] += 1
                 continue
             if field in NAME_FIELDS:
-                crop = crop_row(img, layout, int(ln), scratch, stem)
-                res = adjudicate_name(crop, FIELD_LABEL[field], c0, g0)
+                crop = crop_fn(img, layout, int(ln), scratch, stem)
+                res = adjudicate_fn(crop, FIELD_LABEL[field], c0, g0)
                 done_names += 1
                 print(f"[adj] ({done_names}/{n_names}) L{ln} {field[12:]}: "
                       f"{c0!r} vs {g0!r} -> {res['value']!r} "
@@ -311,18 +409,19 @@ def main() -> None:
         row["confidence"] = row_conf
         out_rows.append(row)
 
-    result = {"agents": ["claude", "gemini"], "metadata": meta,
-              "rows": out_rows, "resolutions": resolutions}
-    suffix = ".adjudicated.partial.json" if args.lines else ".adjudicated.json"
-    out_path = out_dir / f"{args.reel}_{args.frame:04d}{suffix}"
+    result = {"agents": ["claude", "gemini"], "strategy": args.strategy,
+              "metadata": meta, "rows": out_rows, "resolutions": resolutions}
+    part = ".partial" if args.lines else ""
+    out_path = out_dir / f"{args.reel}_{args.frame:04d}.adjudicated.{args.strategy}{part}.json"
     out_path.write_text(json.dumps(result, indent=2))
 
     print(f"adjudicated -> {out_path}", file=sys.stderr)
     name_res = [r for r in resolutions if r["field"] in NAME_FIELDS]
     print(f"  name disagreements: {len(name_res)} | resolved "
-          f"tier1={tally['tier1']} tier2={tally['tier2']} "
-          f"tier2-open={tally.get('tier2-open', 0)} tier3(LOW)={tally['tier3']} "
-          f"err={tally['error']}", file=sys.stderr)
+          f"open-agree={tally.get('open-agree', 0)} "
+          f"open-debate={tally.get('open-debate', 0)} "
+          f"deadlock(LOW)={tally.get('deadlock', 0)} err={tally.get('error', 0)}",
+          file=sys.stderr)
     for r in name_res:
         print(f"    L{r['line_number']} {r['field'][12:]}: "
               f"claude={r['claude']!r} gemini={r['gemini']!r} -> "

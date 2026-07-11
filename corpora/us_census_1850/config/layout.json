@@ -6,5 +6,6 @@
   "band_rows": 6,
   "crop_margin": 80,
   "header_top": 0,
-  "header_bottom": 1050
+  "header_bottom": 1050,
+  "name_col_frac": [0.15, 0.37]
 }
