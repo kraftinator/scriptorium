@@ -20,6 +20,12 @@ CLAUDE_MODEL = "claude-opus-4-8"
 # 2.x Flash line 404s as of 2026-07); bump this deliberately + re-validate a page.
 GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash")
 
+# Per-call timeouts so ONE hung API/CLI call can't wedge a whole run (a real
+# hang cost us a full-page run). A timeout raises -> the retry loop treats it as
+# a failed attempt and moves on, so the pipeline always makes progress.
+CLAUDE_TIMEOUT_S = 180        # one `claude -p` call; normal is ~40-90s
+GEMINI_TIMEOUT_MS = 120_000   # google-genai HttpOptions timeout is in milliseconds
+
 
 def _minify(schema: dict) -> str:
     """Schema as a compact string (no whitespace) to save structural tokens."""
@@ -53,12 +59,18 @@ def claude_backend(jpg: Path, prompt: str, schema: dict) -> dict:
     )
     last = ""
     for attempt in range(3):  # the CLI occasionally returns empty/partial output
-        result = subprocess.run(
-            ["claude", "-p", full, "--model", CLAUDE_MODEL,
-             "--allowedTools", "Read", "--strict-mcp-config"],
-            capture_output=True,
-            text=True,
-        )
+        try:
+            result = subprocess.run(
+                ["claude", "-p", full, "--model", CLAUDE_MODEL,
+                 "--allowedTools", "Read", "--strict-mcp-config"],
+                capture_output=True,
+                text=True,
+                timeout=CLAUDE_TIMEOUT_S,
+            )
+        except subprocess.TimeoutExpired:
+            last = f"CLI hung > {CLAUDE_TIMEOUT_S}s"
+            time.sleep(2 ** attempt)
+            continue
         text = _strip_fence(result.stdout.strip())
         if result.returncode == 0 and text:
             try:
@@ -115,7 +127,8 @@ def gemini_backend(jpg: Path, prompt: str, schema: dict) -> dict:
     from google.genai import types
     from google.genai import errors as genai_errors
 
-    client = genai.Client()  # reads GEMINI_API_KEY / GOOGLE_API_KEY from env
+    # http_options timeout: a hung request raises instead of blocking forever.
+    client = genai.Client(http_options=types.HttpOptions(timeout=GEMINI_TIMEOUT_MS))
     mime = "image/png" if jpg.suffix.lower() == ".png" else "image/jpeg"
     if os.environ.get("GEMINI_NO_SCHEMA"):
         # Free-form JSON: schema is described in the prompt, not natively enforced.
@@ -144,6 +157,11 @@ def gemini_backend(jpg: Path, prompt: str, schema: dict) -> dict:
             break
         except (genai_errors.ServerError, genai_errors.ClientError) as e:
             if getattr(e, "code", None) in (429, 500, 503) and attempt < 5:
+                time.sleep(2 ** attempt)
+                continue
+            raise
+        except Exception:  # network timeout / connection reset -> retry, then give up
+            if attempt < 5:
                 time.sleep(2 ** attempt)
                 continue
             raise
