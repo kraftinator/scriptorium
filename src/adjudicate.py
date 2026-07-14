@@ -274,6 +274,49 @@ def adjudicate_name_v3(crop: Path, label: str, cand_c, cand_g) -> dict:
                          "defaulted to Claude's open read"}
 
 
+def adjudicate_name_v4(crop: Path, label: str, cand_c, cand_g) -> dict:
+    """V4 (anchored-strict): like v2 but with NO open round. The final answer is
+    ALWAYS one of the two candidate readings; a deadlock goes straight to Claude's
+    candidate (LOW). This BANS invented third readings, so a spliced blend like
+    'Noward' (from Howard + Norwood) can never appear. Trade-off: it cannot
+    recover a correct third reading (e.g. 'Mary A.' when both candidates are wrong).
+    """
+    base = {"claude": cand_c, "gemini": cand_g}
+    try:
+        c1 = claude_backend(crop, nudge_prompt(label, cand_c, cand_g), NUDGE_SCHEMA)
+        g1 = gemini_backend(crop, nudge_prompt(label, cand_c, cand_g), NUDGE_SCHEMA)
+    except Exception as e:
+        return {**base, "value": cand_c, "confidence": "LOW", "tier": "error",
+                "rationale": f"adjudication call failed: {e}"}
+    cn, gn = c1.get("name"), g1.get("name")
+    if norm(cn) == norm(gn):
+        return {**base, "value": cn, "tier": "tier1", "rationale": None,
+                "confidence": _conf([c1.get("confidence"), g1.get("confidence")])}
+    try:
+        da = claude_backend(crop, defend_prompt(label, cand_c, cand_g), DEFEND_SCHEMA)
+        db = gemini_backend(crop, defend_prompt(label, cand_g, cand_c), DEFEND_SCHEMA)
+        dp = decide_prompt(label, cand_c, da["argument"], cand_g, db["argument"])
+        dc = claude_backend(crop, dp, DECIDE_SCHEMA)
+        dg = gemini_backend(crop, dp, DECIDE_SCHEMA)
+
+        def pick(v):
+            if norm(v) == norm(cand_c):
+                return cand_c
+            if norm(v) == norm(cand_g):
+                return cand_g
+            return None
+        pc, pg = pick(dc.get("final_name")), pick(dg.get("final_name"))
+        if pc is not None and pc == pg:  # both chose the same candidate
+            rationale = da["argument"] if pc == cand_c else db["argument"]
+            return {**base, "value": pc, "tier": "tier2", "rationale": rationale,
+                    "confidence": _conf([dc.get("confidence"), dg.get("confidence")])}
+    except Exception:
+        pass
+    # deadlock -> Claude's candidate, LOW. NO invented third reading.
+    return {**base, "value": cand_c, "confidence": "LOW", "tier": "tier3",
+            "rationale": "no agreement between the two candidates; defaulted to Claude"}
+
+
 def get_page_png(reel_dir: Path, reel: str, frame: int, scratch: Path) -> Path:
     png = reel_dir / f"{reel}_{frame:04d}.png"
     if png.exists():
@@ -321,6 +364,7 @@ STRATEGIES = {
     "v1": (crop_row, adjudicate_name_v1),        # candidates shown, free re-read debate
     "v2": (crop_row, adjudicate_name_v2),        # candidates shown, anchored debate (committed)
     "v3": (crop_name_cell, adjudicate_name_v3),  # open-read-first, cell crop
+    "v4": (crop_row, adjudicate_name_v4),        # anchored-strict: no third readings
 }
 
 

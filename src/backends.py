@@ -27,6 +27,33 @@ CLAUDE_TIMEOUT_S = 180        # one `claude -p` call; normal is ~40-90s
 GEMINI_TIMEOUT_MS = 120_000   # google-genai HttpOptions timeout is in milliseconds
 
 
+def _load_dotenv() -> None:
+    """Load KEY=VALUE lines from a local .env (repo root, then CWD) into
+    os.environ for any key not already set. Zero-dependency, so no new package.
+
+    Keeps the API key in one gitignored file instead of a shell profile or
+    scattered inline on commands. An already-set env var always wins, so an
+    explicit `GEMINI_API_KEY=… python …` inline override still takes precedence.
+    """
+    seen = set()
+    for base in (Path(__file__).resolve().parent.parent, Path.cwd()):
+        env_path = base / ".env"
+        if env_path in seen or not env_path.is_file():
+            continue
+        seen.add(env_path)
+        for line in env_path.read_text().splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, val = line.partition("=")
+            key, val = key.strip(), val.strip().strip('"').strip("'")
+            if key and key not in os.environ:
+                os.environ[key] = val
+
+
+_load_dotenv()
+
+
 def _minify(schema: dict) -> str:
     """Schema as a compact string (no whitespace) to save structural tokens."""
     return json.dumps(schema, separators=(",", ":"))
