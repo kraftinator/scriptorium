@@ -31,7 +31,7 @@ from tile import transcribe_tiled  # noqa: E402
 
 
 def convert_frame(reel_dir: Path, pages_dir: Path, frame: int, fmt: str) -> Path:
-    """Step 2: JP2 -> JPG/PNG via macOS `sips`, cached. Returns the image path."""
+    """Step 2: JP2 -> JPG/PNG (macOS `sips`, Linux `convert`), cached. Returns the image path."""
     stem = f"{reel_dir.name}_{frame:04d}"
     jp2 = reel_dir / f"{stem}.jp2"
     if not jp2.exists():
@@ -40,8 +40,12 @@ def convert_frame(reel_dir: Path, pages_dir: Path, frame: int, fmt: str) -> Path
     ext = "png" if fmt == "png" else "jpg"
     out = pages_dir / f"{stem}.{ext}"
     if not out.exists():
+        if sys.platform == "darwin":
+            cmd = ["sips", "-s", "format", fmt, str(jp2), "--out", str(out)]
+        else:
+            cmd = ["convert", str(jp2), str(out)]
         subprocess.run(
-            ["sips", "-s", "format", fmt, str(jp2), "--out", str(out)],
+            cmd,
             check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
         )
     return out

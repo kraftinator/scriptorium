@@ -324,8 +324,11 @@ def get_page_png(reel_dir: Path, reel: str, frame: int, scratch: Path) -> Path:
     jp2 = reel_dir / f"{reel}_{frame:04d}.jp2"
     out = scratch / f"{reel}_{frame:04d}.png"
     if not out.exists():
-        subprocess.run(["sips", "-s", "format", "png", str(jp2), "--out", str(out)],
-                       capture_output=True)
+        if sys.platform == "darwin":
+            cmd = ["sips", "-s", "format", "png", str(jp2), "--out", str(out)]
+        else:
+            cmd = ["convert", str(jp2), str(out)]
+        subprocess.run(cmd, capture_output=True)
     return out
 
 
