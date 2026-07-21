@@ -1,0 +1,19 @@
+{
+  "corpus": "corpora/us_census_1850",
+  "reel": "populationschedu0604unix",
+  "frame": 23,
+  "cases": [
+    {"id": "L1-first",  "line": 1,  "field": "interpreted_first_name", "correct": "Chls"},
+    {"id": "L1-last",   "line": 1,  "field": "interpreted_last_name",  "correct": "Howard"},
+    {"id": "L4-first",  "line": 4,  "field": "interpreted_first_name", "correct": "Mary A."},
+    {"id": "L7-first",  "line": 7,  "field": "interpreted_first_name", "correct": "Milo J."},
+    {"id": "L7-last",   "line": 7,  "field": "interpreted_last_name",  "correct": "Hulett"},
+    {"id": "L23-first", "line": 23, "field": "interpreted_first_name", "correct": "Clarinda"},
+    {"id": "L28-first", "line": 28, "field": "interpreted_first_name", "correct": "Saml."},
+    {"id": "L28-last",  "line": 28, "field": "interpreted_last_name",  "correct": "Alvin"},
+    {"id": "L33-first", "line": 33, "field": "interpreted_first_name", "correct": "E.P."},
+    {"id": "L33-last",  "line": 33, "field": "interpreted_last_name",  "correct": "Gibson"},
+    {"id": "L34-first", "line": 34, "field": "interpreted_first_name", "correct": "Julietta"},
+    {"id": "L35-first", "line": 35, "field": "interpreted_first_name", "correct": "Wm. H."}
+  ]
+}

@@ -1,0 +1,78 @@
+{
+  "_comment": "Ground-truth cases for the adjudication scorecard. Each case names one CELL (corpus/reel/frame/line/field) and the CORRECT reading. score.py fetches the two candidate readings from the current per-agent JSON files at run time, calls the selected strategy, and marks the case pass/fail on `correct`. Leave `correct` null (with a `note`) for cells whose ground truth is not yet confirmed — score.py will list them as 'UNCONFIRMED' rather than count them. Add a case by appending to `cases`; no code changes needed.",
+  "corpus": "corpora/us_census_1850",
+  "reel": "populationschedu0604unix",
+  "frame": 23,
+  "cases": [
+    {
+      "id": "L1-first",
+      "line": 1,
+      "field": "interpreted_first_name",
+      "correct": "Chls",
+      "note": "Exact-transcription rule: keep the abbreviation, do NOT expand to 'Charles' or normalize to 'Chas'."
+    },
+    {
+      "id": "L1-last",
+      "line": 1,
+      "field": "interpreted_last_name",
+      "correct": "Howard",
+      "note": "CLAUDE.md: 'getting Howard wrong is not acceptable'. The invented blend 'Noward' (Howard+Norwood) must never appear."
+    },
+    {
+      "id": "L4-first",
+      "line": 4,
+      "field": "interpreted_first_name",
+      "correct": "Mary A.",
+      "note": "Neither candidate ('Mary S.' or 'Mary Ann') is correct — a strategy must recover the third reading to pass. v1 got this 2/3 by drift; v4 cannot (by design)."
+    },
+    {
+      "id": "L7-first",
+      "line": 7,
+      "field": "interpreted_first_name",
+      "correct": null,
+      "note": "UNCONFIRMED — v1/v2 chose 'Milo J.', v3 chose 'Milo P.'; middle initial is genuinely ambiguous."
+    },
+    {
+      "id": "L7-last",
+      "line": 7,
+      "field": "interpreted_last_name",
+      "correct": "Hulett",
+      "note": "CLAUDE.md confirms Hulett resolves correctly under the anchored strategies."
+    },
+    {
+      "id": "L23-first",
+      "line": 23,
+      "field": "interpreted_first_name",
+      "correct": "Clarinda",
+      "note": "CLAUDE.md confirms Clarinda resolves correctly."
+    },
+    {
+      "id": "L28-last",
+      "line": 28,
+      "field": "interpreted_last_name",
+      "correct": null,
+      "note": "UNCONFIRMED — v2 chose 'Alvin' over 'Horn'; needs user verification against the page."
+    },
+    {
+      "id": "L33-last",
+      "line": 33,
+      "field": "interpreted_last_name",
+      "correct": "Gibson",
+      "note": "The false-agreement case (both models read 'Cissen'); confirmed by user reading of the page. NO current strategy solves this without upstream decomposition — see experiments/decomposition/."
+    },
+    {
+      "id": "L34-first",
+      "line": 34,
+      "field": "interpreted_first_name",
+      "correct": null,
+      "note": "UNCONFIRMED — v4 chose 'Julietta' HIGH/tier1; needs user verification."
+    },
+    {
+      "id": "L35-first",
+      "line": 35,
+      "field": "interpreted_first_name",
+      "correct": null,
+      "note": "UNCONFIRMED — v4 chose 'Wm. H.' tier2; needs user verification."
+    }
+  ]
+}

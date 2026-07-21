@@ -1,0 +1,511 @@
+{
+  "fixtures": "/home/adam/Projects/scriptorium/src/adjudicate2/eval/fixtures.json",
+  "strategies": [
+    "v1",
+    "v2",
+    "v3",
+    "v4"
+  ],
+  "cases": [
+    "L1-first",
+    "L1-last",
+    "L4-first",
+    "L7-first",
+    "L7-last",
+    "L23-first",
+    "L28-last",
+    "L33-last",
+    "L34-first",
+    "L35-first"
+  ],
+  "results": {
+    "v1": {
+      "L1-first": {
+        "value": "Chls",
+        "tier": "agree(no-call)",
+        "confidence": "HIGH",
+        "elapsed_s": 0.0,
+        "mark": "PASS",
+        "expected": "Chls",
+        "candidates": {
+          "claude": "Chls",
+          "gemini": "Chls"
+        }
+      },
+      "L1-last": {
+        "value": "Howard",
+        "tier": "agree(no-call)",
+        "confidence": "HIGH",
+        "elapsed_s": 0.0,
+        "mark": "PASS",
+        "expected": "Howard",
+        "candidates": {
+          "claude": "Howard",
+          "gemini": "Howard"
+        }
+      },
+      "L4-first": {
+        "value": "Mary S.",
+        "tier": "tier3",
+        "confidence": "LOW",
+        "elapsed_s": 133.7,
+        "mark": "FAIL",
+        "expected": "Mary A.",
+        "candidates": {
+          "claude": "Mary S.",
+          "gemini": "Mary A."
+        }
+      },
+      "L7-first": {
+        "value": "Milo J.",
+        "tier": "debate",
+        "confidence": "MEDIUM",
+        "elapsed_s": 70.6,
+        "mark": "?",
+        "expected": null,
+        "candidates": {
+          "claude": "Milo J.",
+          "gemini": "Milo I."
+        }
+      },
+      "L7-last": {
+        "value": "Hulett",
+        "tier": "agree(no-call)",
+        "confidence": "HIGH",
+        "elapsed_s": 0.0,
+        "mark": "PASS",
+        "expected": "Hulett",
+        "candidates": {
+          "claude": "Hulett",
+          "gemini": "Hulett"
+        }
+      },
+      "L23-first": {
+        "value": "Clarinda",
+        "tier": "tier1",
+        "confidence": "HIGH",
+        "elapsed_s": 18.1,
+        "mark": "PASS",
+        "expected": "Clarinda",
+        "candidates": {
+          "claude": "Larinda",
+          "gemini": "Clarinda"
+        }
+      },
+      "L28-last": {
+        "value": "Alvin",
+        "tier": "agree(no-call)",
+        "confidence": "HIGH",
+        "elapsed_s": 0.0,
+        "mark": "?",
+        "expected": null,
+        "candidates": {
+          "claude": "Alvin",
+          "gemini": "Alvin"
+        }
+      },
+      "L33-last": {
+        "value": "Gibson",
+        "tier": "tier3",
+        "confidence": "LOW",
+        "elapsed_s": 275.7,
+        "mark": "PASS",
+        "expected": "Gibson",
+        "candidates": {
+          "claude": "Gibson",
+          "gemini": "Cisen"
+        }
+      },
+      "L34-first": {
+        "value": "Julietta",
+        "tier": "tier1",
+        "confidence": "HIGH",
+        "elapsed_s": 13.7,
+        "mark": "?",
+        "expected": null,
+        "candidates": {
+          "claude": "Talitha",
+          "gemini": "Julietta"
+        }
+      },
+      "L35-first": {
+        "value": "Wm. H.",
+        "tier": "debate",
+        "confidence": "LOW",
+        "elapsed_s": 223.4,
+        "mark": "?",
+        "expected": null,
+        "candidates": {
+          "claude": "Mary A.",
+          "gemini": "Wm. H."
+        }
+      }
+    },
+    "v2": {
+      "L1-first": {
+        "value": "Chls",
+        "tier": "agree(no-call)",
+        "confidence": "HIGH",
+        "elapsed_s": 0.0,
+        "mark": "PASS",
+        "expected": "Chls",
+        "candidates": {
+          "claude": "Chls",
+          "gemini": "Chls"
+        }
+      },
+      "L1-last": {
+        "value": "Howard",
+        "tier": "agree(no-call)",
+        "confidence": "HIGH",
+        "elapsed_s": 0.0,
+        "mark": "PASS",
+        "expected": "Howard",
+        "candidates": {
+          "claude": "Howard",
+          "gemini": "Howard"
+        }
+      },
+      "L4-first": {
+        "value": "Mary A.",
+        "tier": "tier2-open",
+        "confidence": "LOW",
+        "elapsed_s": 211.7,
+        "mark": "PASS",
+        "expected": "Mary A.",
+        "candidates": {
+          "claude": "Mary S.",
+          "gemini": "Mary A."
+        }
+      },
+      "L7-first": {
+        "value": "Milo J.",
+        "tier": "tier2-open",
+        "confidence": "LOW",
+        "elapsed_s": 128.3,
+        "mark": "?",
+        "expected": null,
+        "candidates": {
+          "claude": "Milo J.",
+          "gemini": "Milo I."
+        }
+      },
+      "L7-last": {
+        "value": "Hulett",
+        "tier": "agree(no-call)",
+        "confidence": "HIGH",
+        "elapsed_s": 0.0,
+        "mark": "PASS",
+        "expected": "Hulett",
+        "candidates": {
+          "claude": "Hulett",
+          "gemini": "Hulett"
+        }
+      },
+      "L23-first": {
+        "value": "Clarinda",
+        "tier": "tier1",
+        "confidence": "MEDIUM",
+        "elapsed_s": 58.9,
+        "mark": "PASS",
+        "expected": "Clarinda",
+        "candidates": {
+          "claude": "Larinda",
+          "gemini": "Clarinda"
+        }
+      },
+      "L28-last": {
+        "value": "Alvin",
+        "tier": "agree(no-call)",
+        "confidence": "HIGH",
+        "elapsed_s": 0.0,
+        "mark": "?",
+        "expected": null,
+        "candidates": {
+          "claude": "Alvin",
+          "gemini": "Alvin"
+        }
+      },
+      "L33-last": {
+        "value": "Cissen",
+        "tier": "tier2-open",
+        "confidence": "LOW",
+        "elapsed_s": 285.3,
+        "mark": "FAIL",
+        "expected": "Gibson",
+        "candidates": {
+          "claude": "Gibson",
+          "gemini": "Cisen"
+        }
+      },
+      "L34-first": {
+        "value": "Julietta",
+        "tier": "tier1",
+        "confidence": "HIGH",
+        "elapsed_s": 13.5,
+        "mark": "?",
+        "expected": null,
+        "candidates": {
+          "claude": "Talitha",
+          "gemini": "Julietta"
+        }
+      },
+      "L35-first": {
+        "value": "Wm. H.",
+        "tier": "tier2",
+        "confidence": "MEDIUM",
+        "elapsed_s": 120.6,
+        "mark": "?",
+        "expected": null,
+        "candidates": {
+          "claude": "Mary A.",
+          "gemini": "Wm. H."
+        }
+      }
+    },
+    "v3": {
+      "L1-first": {
+        "value": "Chls",
+        "tier": "agree(no-call)",
+        "confidence": "HIGH",
+        "elapsed_s": 0.0,
+        "mark": "PASS",
+        "expected": "Chls",
+        "candidates": {
+          "claude": "Chls",
+          "gemini": "Chls"
+        }
+      },
+      "L1-last": {
+        "value": "Howard",
+        "tier": "agree(no-call)",
+        "confidence": "HIGH",
+        "elapsed_s": 0.0,
+        "mark": "PASS",
+        "expected": "Howard",
+        "candidates": {
+          "claude": "Howard",
+          "gemini": "Howard"
+        }
+      },
+      "L4-first": {
+        "value": "Mary S.",
+        "tier": "open-debate",
+        "confidence": "LOW",
+        "elapsed_s": 71.3,
+        "mark": "FAIL",
+        "expected": "Mary A.",
+        "candidates": {
+          "claude": "Mary S.",
+          "gemini": "Mary A."
+        }
+      },
+      "L7-first": {
+        "value": "Milo J.",
+        "tier": "open-debate",
+        "confidence": "HIGH",
+        "elapsed_s": 48.6,
+        "mark": "?",
+        "expected": null,
+        "candidates": {
+          "claude": "Milo J.",
+          "gemini": "Milo I."
+        }
+      },
+      "L7-last": {
+        "value": "Hulett",
+        "tier": "agree(no-call)",
+        "confidence": "HIGH",
+        "elapsed_s": 0.0,
+        "mark": "PASS",
+        "expected": "Hulett",
+        "candidates": {
+          "claude": "Hulett",
+          "gemini": "Hulett"
+        }
+      },
+      "L23-first": {
+        "value": "Clarinda",
+        "tier": "open-agree",
+        "confidence": "MEDIUM",
+        "elapsed_s": 15.0,
+        "mark": "PASS",
+        "expected": "Clarinda",
+        "candidates": {
+          "claude": "Larinda",
+          "gemini": "Clarinda"
+        }
+      },
+      "L28-last": {
+        "value": "Alvin",
+        "tier": "agree(no-call)",
+        "confidence": "HIGH",
+        "elapsed_s": 0.0,
+        "mark": "?",
+        "expected": null,
+        "candidates": {
+          "claude": "Alvin",
+          "gemini": "Alvin"
+        }
+      },
+      "L33-last": {
+        "value": "E. P. Gibson",
+        "tier": "deadlock",
+        "confidence": "LOW",
+        "elapsed_s": 100.1,
+        "mark": "FAIL",
+        "expected": "Gibson",
+        "candidates": {
+          "claude": "Gibson",
+          "gemini": "Cisen"
+        }
+      },
+      "L34-first": {
+        "value": "Julietta",
+        "tier": "open-agree",
+        "confidence": "MEDIUM",
+        "elapsed_s": 10.1,
+        "mark": "?",
+        "expected": null,
+        "candidates": {
+          "claude": "Talitha",
+          "gemini": "Julietta"
+        }
+      },
+      "L35-first": {
+        "value": "Mary N.",
+        "tier": "deadlock",
+        "confidence": "LOW",
+        "elapsed_s": 151.4,
+        "mark": "?",
+        "expected": null,
+        "candidates": {
+          "claude": "Mary A.",
+          "gemini": "Wm. H."
+        }
+      }
+    },
+    "v4": {
+      "L1-first": {
+        "value": "Chls",
+        "tier": "agree(no-call)",
+        "confidence": "HIGH",
+        "elapsed_s": 0.0,
+        "mark": "PASS",
+        "expected": "Chls",
+        "candidates": {
+          "claude": "Chls",
+          "gemini": "Chls"
+        }
+      },
+      "L1-last": {
+        "value": "Howard",
+        "tier": "agree(no-call)",
+        "confidence": "HIGH",
+        "elapsed_s": 0.0,
+        "mark": "PASS",
+        "expected": "Howard",
+        "candidates": {
+          "claude": "Howard",
+          "gemini": "Howard"
+        }
+      },
+      "L4-first": {
+        "value": "Mary S.",
+        "tier": "tier3",
+        "confidence": "LOW",
+        "elapsed_s": 146.4,
+        "mark": "FAIL",
+        "expected": "Mary A.",
+        "candidates": {
+          "claude": "Mary S.",
+          "gemini": "Mary A."
+        }
+      },
+      "L7-first": {
+        "value": "Milo J.",
+        "tier": "tier3",
+        "confidence": "LOW",
+        "elapsed_s": 119.5,
+        "mark": "?",
+        "expected": null,
+        "candidates": {
+          "claude": "Milo J.",
+          "gemini": "Milo I."
+        }
+      },
+      "L7-last": {
+        "value": "Hulett",
+        "tier": "agree(no-call)",
+        "confidence": "HIGH",
+        "elapsed_s": 0.0,
+        "mark": "PASS",
+        "expected": "Hulett",
+        "candidates": {
+          "claude": "Hulett",
+          "gemini": "Hulett"
+        }
+      },
+      "L23-first": {
+        "value": "Clarinda",
+        "tier": "tier1",
+        "confidence": "MEDIUM",
+        "elapsed_s": 14.7,
+        "mark": "PASS",
+        "expected": "Clarinda",
+        "candidates": {
+          "claude": "Larinda",
+          "gemini": "Clarinda"
+        }
+      },
+      "L28-last": {
+        "value": "Alvin",
+        "tier": "agree(no-call)",
+        "confidence": "HIGH",
+        "elapsed_s": 0.0,
+        "mark": "?",
+        "expected": null,
+        "candidates": {
+          "claude": "Alvin",
+          "gemini": "Alvin"
+        }
+      },
+      "L33-last": {
+        "value": "Cisen",
+        "tier": "tier2",
+        "confidence": "LOW",
+        "elapsed_s": 200.9,
+        "mark": "FAIL",
+        "expected": "Gibson",
+        "candidates": {
+          "claude": "Gibson",
+          "gemini": "Cisen"
+        }
+      },
+      "L34-first": {
+        "value": "Julietta",
+        "tier": "tier1",
+        "confidence": "HIGH",
+        "elapsed_s": 18.3,
+        "mark": "?",
+        "expected": null,
+        "candidates": {
+          "claude": "Talitha",
+          "gemini": "Julietta"
+        }
+      },
+      "L35-first": {
+        "value": "Wm. H.",
+        "tier": "tier2",
+        "confidence": "MEDIUM",
+        "elapsed_s": 150.9,
+        "mark": "?",
+        "expected": null,
+        "candidates": {
+          "claude": "Mary A.",
+          "gemini": "Wm. H."
+        }
+      }
+    }
+  }
+}

@@ -4,6 +4,9 @@ corpora/*/data/pages/
 corpora/*/data/crops/
 corpora/*/output/
 
+# Per-strategy scratch dirs (crop PNGs + results.json — regenerable)
+src/strategies/_*/
+
 # Python / venv
 __pycache__/
 *.pyc
