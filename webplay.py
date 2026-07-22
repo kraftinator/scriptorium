@@ -48,7 +48,7 @@ PAGE = """<!doctype html><html><head><meta charset=utf-8><title>Gemini Playgroun
  @keyframes spin{{to{{transform:rotate(360deg)}}}}
 </style></head><body>
 <h1>Gemini Playground &mdash; 1850 Census</h1>
-<p><a href="/view">View transcribed output</a> &middot; Strategies: <a href="/strategies/s1">s1</a> &middot; <a href="/strategies/s2">s2</a> &middot; <a href="/strategies/s3">s3</a> &middot; <a href="/strategies/s4">s4</a> &middot; <a href="/strategies/s5">s5</a> &middot; <a href="/strategies/s6">s6</a> &middot; <a href="/strategies/s7">s7</a> &middot; <a href="/strategies/s8">s8</a> &middot; <a href="/strategies/s9">s9</a> &middot; <a href="/strategies/s10">s10</a> &middot; <a href="/strategies/s11">s11</a> &middot; <a href="/strategies/s12">s12</a></p>
+<p><a href="/view">View transcribed output</a> &middot; Strategies: <a href="/strategies/s1">s1</a> &middot; <a href="/strategies/s2">s2</a> &middot; <a href="/strategies/s3">s3</a> &middot; <a href="/strategies/s4">s4</a> &middot; <a href="/strategies/s5">s5</a> &middot; <a href="/strategies/s6">s6</a> &middot; <a href="/strategies/s7">s7</a> &middot; <a href="/strategies/s8">s8</a> &middot; <a href="/strategies/s9">s9</a> &middot; <a href="/strategies/s10">s10</a> &middot; <a href="/strategies/s11">s11</a> &middot; <a href="/strategies/s12">s12</a> &middot; <a href="/strategies/s13">s13</a> &middot; <a href="/strategies/s14">s14</a> &middot; <a href="/strategies/s15">s15</a> &middot; <a href="/strategies/s16">s16</a> &middot; <a href="/strategies/s17">s17</a> &middot; <a href="/strategies/s18">s18</a> &middot; <a href="/strategies/s19">s19</a> &middot; <a href="/strategies/s20">s20</a> &middot; <a href="/strategies/s21">s21</a> &middot; <a href="/strategies/s22">s22</a> &middot; <a href="/strategies/s23">s23</a></p>
 <form method=post>
  <div class=row>
   <div><label>Model</label><select name=model>{model_opts}</select></div>
@@ -238,7 +238,7 @@ def view(frame=None):
     body = render_view(frame)
     return (VIEW_CSS + "<div class=wrap><h1>Scriptorium Output</h1>"
             "<p><a href='/'>&larr; API playground</a> &middot; "
-            "Strategies: <a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; <a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; <a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; <a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; <a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; <a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a></p>"
+            "Strategies: <a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; <a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; <a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; <a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; <a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; <a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; <a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; <a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; <a href='/strategies/s17'>s17</a> &middot; <a href='/strategies/s18'>s18</a> &middot; <a href='/strategies/s19'>s19</a> &middot; <a href='/strategies/s20'>s20</a> &middot; <a href='/strategies/s21'>s21</a> &middot; <a href='/strategies/s22'>s22</a> &middot; <a href='/strategies/s23'>s23</a> &middot; <a href='/strategies/s15'>s15</a></p>"
             f"<p class=nav>Pages: {nav}</p>{body}</div>")
 
 
@@ -254,6 +254,17 @@ S9_DIR = Path("src/strategies/_s9")
 S10_DIR = Path("src/strategies/_s10")
 S11_DIR = Path("src/strategies/_s11")
 S12_DIR = Path("src/strategies/_s12")
+S13_DIR = Path("src/strategies/_s13")
+S14_DIR = Path("src/strategies/_s14")
+S15_DIR = Path("src/strategies/_s15")
+S16_DIR = Path("src/strategies/_s16")
+S17_DIR = Path("src/strategies/_s17")
+S18_DIR = Path("src/strategies/_s18")
+S19_DIR = Path("src/strategies/_s19")
+S20_DIR = Path("src/strategies/_s20")
+S21_DIR = Path("src/strategies/_s21")
+S22_DIR = Path("src/strategies/_s22")
+S23_DIR = Path("src/strategies/_s23")
 GROUND_TRUTH = Path("src/strategies/ground_truth.json")
 
 
@@ -338,7 +349,7 @@ def s1_view():
     </style>"""
     return (css + "<div class=wrap><h1>Scriptorium — Strategies</h1>"
             "<p><a href='/'>&larr; API playground</a> &middot; <a href='/view'>consensus view</a> &middot; "
-            "<a href='/strategies/s1' style='font-weight:600'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; <a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; <a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; <a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; <a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; <a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a></p>"
+            "<a href='/strategies/s1' style='font-weight:600'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; <a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; <a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; <a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; <a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; <a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; <a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; <a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; <a href='/strategies/s17'>s17</a> &middot; <a href='/strategies/s18'>s18</a> &middot; <a href='/strategies/s19'>s19</a> &middot; <a href='/strategies/s20'>s20</a> &middot; <a href='/strategies/s21'>s21</a> &middot; <a href='/strategies/s22'>s22</a> &middot; <a href='/strategies/s23'>s23</a></p>"
             f"{head}"
             "<div class='tablewrap s1'><table><thead><tr>"
             "<th>Ln</th><th>Crop</th><th>Claude</th><th>Gemini</th><th>Ground truth</th><th>Agree?</th>"
@@ -403,7 +414,7 @@ def s2_view():
     </style>"""
     return (css + "<div class=wrap><h1>Scriptorium — Strategies</h1>"
             "<p><a href='/'>&larr; API playground</a> &middot; <a href='/view'>consensus view</a> &middot; "
-            "<a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2' style='font-weight:600'>s2</a> &middot; <a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; <a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; <a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; <a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; <a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a></p>"
+            "<a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2' style='font-weight:600'>s2</a> &middot; <a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; <a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; <a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; <a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; <a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; <a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; <a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; <a href='/strategies/s17'>s17</a> &middot; <a href='/strategies/s18'>s18</a> &middot; <a href='/strategies/s19'>s19</a> &middot; <a href='/strategies/s20'>s20</a> &middot; <a href='/strategies/s21'>s21</a> &middot; <a href='/strategies/s22'>s22</a> &middot; <a href='/strategies/s23'>s23</a></p>"
             f"{head}"
             "<div class='tablewrap s2'><table><thead><tr>"
             "<th>Ln</th><th>Crop</th>"
@@ -482,7 +493,7 @@ def s3_view():
     return (css + "<div class=wrap><h1>Scriptorium — Strategies</h1>"
             "<p><a href='/'>&larr; API playground</a> &middot; <a href='/view'>consensus view</a> &middot; "
             "<a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; "
-            "<a href='/strategies/s3' style='font-weight:600'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; <a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; <a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; <a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; <a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a></p>"
+            "<a href='/strategies/s3' style='font-weight:600'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; <a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; <a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; <a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; <a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; <a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; <a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; <a href='/strategies/s17'>s17</a> &middot; <a href='/strategies/s18'>s18</a> &middot; <a href='/strategies/s19'>s19</a> &middot; <a href='/strategies/s20'>s20</a> &middot; <a href='/strategies/s21'>s21</a> &middot; <a href='/strategies/s22'>s22</a> &middot; <a href='/strategies/s23'>s23</a></p>"
             f"{head}"
             "<div class='tablewrap s3'><table><thead><tr>"
             "<th>Ln / field</th><th>Crop</th>"
@@ -550,7 +561,7 @@ def s4_view():
     return (css + "<div class=wrap><h1>Scriptorium — Strategies</h1>"
             "<p><a href='/'>&larr; API playground</a> &middot; <a href='/view'>consensus view</a> &middot; "
             "<a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; "
-            "<a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4' style='font-weight:600'>s4</a> &middot; <a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; <a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; <a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; <a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a></p>"
+            "<a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4' style='font-weight:600'>s4</a> &middot; <a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; <a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; <a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; <a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; <a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; <a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; <a href='/strategies/s17'>s17</a> &middot; <a href='/strategies/s18'>s18</a> &middot; <a href='/strategies/s19'>s19</a> &middot; <a href='/strategies/s20'>s20</a> &middot; <a href='/strategies/s21'>s21</a> &middot; <a href='/strategies/s22'>s22</a> &middot; <a href='/strategies/s23'>s23</a></p>"
             f"{head}"
             "<div class='tablewrap s4'><table><thead><tr>"
             "<th>Ln</th><th>Crop</th>"
@@ -625,7 +636,7 @@ def s5_view():
             "<p><a href='/'>&larr; API playground</a> &middot; <a href='/view'>consensus view</a> &middot; "
             "<a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; "
             "<a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; "
-            "<a href='/strategies/s5' style='font-weight:600'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; <a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; <a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; <a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a></p>"
+            "<a href='/strategies/s5' style='font-weight:600'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; <a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; <a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; <a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; <a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; <a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; <a href='/strategies/s17'>s17</a> &middot; <a href='/strategies/s18'>s18</a> &middot; <a href='/strategies/s19'>s19</a> &middot; <a href='/strategies/s20'>s20</a> &middot; <a href='/strategies/s21'>s21</a> &middot; <a href='/strategies/s22'>s22</a> &middot; <a href='/strategies/s23'>s23</a></p>"
             f"{head}"
             "<div class='tablewrap s5'><table><thead>"
             "<tr><th rowspan=2>Ln</th><th rowspan=2>Crop</th>"
@@ -702,7 +713,7 @@ def s6_view():
             "<p><a href='/'>&larr; API playground</a> &middot; <a href='/view'>consensus view</a> &middot; "
             "<a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; "
             "<a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; "
-            "<a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6' style='font-weight:600'>s6</a> &middot; <a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; <a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; <a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a></p>"
+            "<a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6' style='font-weight:600'>s6</a> &middot; <a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; <a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; <a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; <a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; <a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; <a href='/strategies/s17'>s17</a> &middot; <a href='/strategies/s18'>s18</a> &middot; <a href='/strategies/s19'>s19</a> &middot; <a href='/strategies/s20'>s20</a> &middot; <a href='/strategies/s21'>s21</a> &middot; <a href='/strategies/s22'>s22</a> &middot; <a href='/strategies/s23'>s23</a></p>"
             f"{head}"
             "<div class='tablewrap s6'><table><thead>"
             "<tr><th rowspan=2>Ln</th><th rowspan=2>Crop</th>"
@@ -795,7 +806,7 @@ def s7_view():
             "<a href='/strategies/s7' style='font-weight:600'>s7</a> &middot; "
             "<a href='/strategies/s8'>s8</a> &middot; <a href='/strategies/s9'>s9</a> &middot; "
             "<a href='/strategies/s10'>s10</a> &middot; <a href='/strategies/s11'>s11</a> &middot; "
-            "<a href='/strategies/s12'>s12</a></p>"
+            "<a href='/strategies/s12'>s12</a> &middot; <a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; <a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; <a href='/strategies/s17'>s17</a> &middot; <a href='/strategies/s18'>s18</a> &middot; <a href='/strategies/s19'>s19</a> &middot; <a href='/strategies/s20'>s20</a> &middot; <a href='/strategies/s21'>s21</a> &middot; <a href='/strategies/s22'>s22</a> &middot; <a href='/strategies/s23'>s23</a></p>"
             f"{head}"
             "<div class='tablewrap s7'><table><thead>"
             "<tr><th rowspan=2>Ln / field</th><th rowspan=2>Crop</th>"
@@ -893,7 +904,7 @@ def s8_view():
             "<a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; "
             "<a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8' style='font-weight:600'>s8</a> &middot; "
             "<a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; "
-            "<a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a></p>"
+            "<a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; <a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; <a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; <a href='/strategies/s17'>s17</a> &middot; <a href='/strategies/s18'>s18</a> &middot; <a href='/strategies/s19'>s19</a> &middot; <a href='/strategies/s20'>s20</a> &middot; <a href='/strategies/s21'>s21</a> &middot; <a href='/strategies/s22'>s22</a> &middot; <a href='/strategies/s23'>s23</a></p>"
             f"{head}"
             "<div class='tablewrap s8'><table><thead>"
             "<tr><th rowspan=2>Ln / field</th><th rowspan=2>Crop</th>"
@@ -992,7 +1003,7 @@ def s9_view():
             "<a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; "
             "<a href='/strategies/s9' style='font-weight:600'>s9</a> &middot; "
             "<a href='/strategies/s10'>s10</a> &middot; <a href='/strategies/s11'>s11</a> &middot; "
-            "<a href='/strategies/s12'>s12</a></p>"
+            "<a href='/strategies/s12'>s12</a> &middot; <a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; <a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; <a href='/strategies/s17'>s17</a> &middot; <a href='/strategies/s18'>s18</a> &middot; <a href='/strategies/s19'>s19</a> &middot; <a href='/strategies/s20'>s20</a> &middot; <a href='/strategies/s21'>s21</a> &middot; <a href='/strategies/s22'>s22</a> &middot; <a href='/strategies/s23'>s23</a></p>"
             f"{head}"
             "<div class='tablewrap s9'><table><thead>"
             "<tr><th>Ln / field</th><th>Crop</th>"
@@ -1103,7 +1114,7 @@ def s10_view():
             "<a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; "
             "<a href='/strategies/s9'>s9</a> &middot; "
             "<a href='/strategies/s10' style='font-weight:600'>s10</a> &middot; "
-            "<a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a></p>"
+            "<a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; <a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; <a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; <a href='/strategies/s17'>s17</a> &middot; <a href='/strategies/s18'>s18</a> &middot; <a href='/strategies/s19'>s19</a> &middot; <a href='/strategies/s20'>s20</a> &middot; <a href='/strategies/s21'>s21</a> &middot; <a href='/strategies/s22'>s22</a> &middot; <a href='/strategies/s23'>s23</a></p>"
             f"{head}"
             "<div class='tablewrap s10'><table><thead>"
             "<tr><th>Ln / field</th><th>Crop</th>"
@@ -1289,11 +1300,910 @@ def s12_view():
             "<a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; "
             "<a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; "
             "<a href='/strategies/s11'>s11</a> &middot; "
-            "<a href='/strategies/s12' style='font-weight:600'>s12</a></p>"
+            "<a href='/strategies/s12' style='font-weight:600'>s12</a> &middot; "
+            "<a href='/strategies/s13'>s13</a></p>"
             f"{head}"
             "<div class='tablewrap s12'><table><thead>"
             "<tr><th>Ln / field</th><th>Crop</th>"
             "<th>Claude</th><th>Gemini</th><th>Truth</th></tr>"
+            "</thead>"
+            f"<tbody>{rows}</tbody></table></div></div>")
+
+
+@app.route("/strategies/s13/crop/<name>")
+def s13_crop(name):
+    p = S13_DIR / name
+    if not p.exists() or ".." in name or "/" in name:
+        return ("", 404)
+    return send_file(p.resolve(), mimetype="image/png")
+
+
+@app.route("/strategies/s13")
+def s13_view():
+    p = S13_DIR / "results.json"
+    if not p.exists():
+        return VIEW_CSS + "<div class=wrap><h1>s13</h1><p>No results.json yet — run <code>src/strategies/s13.py</code>.</p></div>"
+    d = json.loads(p.read_text())
+    tm = _fresh_truth()
+    field_key = {"first": "interpreted_first_name", "last": "interpreted_last_name"}
+
+    rows = ""
+    c_pass = g_pass = tot = 0
+    for r in d["results"]:
+        for field in ("first", "last"):
+            fd = r["fields"][field]
+            truth = tm.get((r["line"], field_key[field])) or ""
+            c, g = fd["claude"], fd["gemini_flash"]
+
+            def cell(read, expected):
+                if not expected:
+                    return f"<td class=nogt>{html.escape(read['name'])}<div class=meta>{read['confidence']}</div></td>", False
+                ok = _match(read["name"], expected)
+                cls = "pass" if ok else "fail"
+                return (f"<td class={cls}>{html.escape(read['name'])}"
+                        f"<div class=meta>{read['confidence']}</div></td>"), ok
+
+            c_html, c_ok = cell(c, truth)
+            g_html, g_ok = cell(g, truth)
+            if truth:
+                tot += 1
+                c_pass += c_ok; g_pass += g_ok
+            rows += (f"<tr><td class=ln>L{r['line']:02d}<div class=meta>{field}</div></td>"
+                     f"<td><img src='/strategies/s13/crop/{html.escape(r['crop'])}' loading=lazy></td>"
+                     f"{c_html}{g_html}"
+                     f"<td class=truth>{html.escape(truth) or '—'}</td></tr>")
+
+    head = (f"<h2>s13 — archaic abbreviation hint in prompt (L35 only)</h2>"
+            f"<p class=meta>{d['reel']} frame {d['frame']:04d} · "
+            f"target lines: {d.get('target_lines')} · "
+            f"Claude {c_pass}/{tot} · Gemini {g_pass}/{tot}</p>"
+            f"<details><summary class=meta>prompt (first name)</summary>"
+            f"<pre style='white-space:pre-wrap;font-size:12px'>{html.escape(d['first_prompt'])}</pre></details>")
+    css = VIEW_CSS + """<style>
+     .s13 img{max-width:520px;max-height:180px;border:1px solid #ddd;border-radius:3px;background:#fff}
+     .s13 td.pass{background:#e6f5d9} .s13 td.fail{background:#fbe6e6}
+     .s13 td.nogt{background:#f6f6f6;color:#333}
+     .s13 td.truth{background:#eef0f5;font-weight:600}
+     .s13 td .meta{font-size:11px;color:#666}
+    </style>"""
+    return (css + "<div class=wrap><h1>Scriptorium — Strategies</h1>"
+            "<p><a href='/'>&larr; API playground</a> &middot; <a href='/view'>consensus view</a> &middot; "
+            "<a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; "
+            "<a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; "
+            "<a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; "
+            "<a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; "
+            "<a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; "
+            "<a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; "
+            "<a href='/strategies/s13' style='font-weight:600'>s13</a> &middot; "
+            "<a href='/strategies/s14'>s14</a> &middot; <a href='/strategies/s15'>s15</a></p>"
+            f"{head}"
+            "<div class='tablewrap s13'><table><thead>"
+            "<tr><th>Ln / field</th><th>Crop</th>"
+            "<th>Claude</th><th>Gemini</th><th>Truth</th></tr>"
+            "</thead>"
+            f"<tbody>{rows}</tbody></table></div></div>")
+
+
+@app.route("/strategies/s14/crop/<name>")
+def s14_crop(name):
+    p = S14_DIR / name
+    if not p.exists() or ".." in name or "/" in name:
+        return ("", 404)
+    return send_file(p.resolve(), mimetype="image/png")
+
+
+@app.route("/strategies/s14")
+def s14_view():
+    p = S14_DIR / "results.json"
+    if not p.exists():
+        return VIEW_CSS + "<div class=wrap><h1>s14</h1><p>No results.json yet — run <code>src/strategies/s14.py</code>.</p></div>"
+    d = json.loads(p.read_text())
+    tm = _fresh_truth()
+    field_key = {"first": "interpreted_first_name", "last": "interpreted_last_name"}
+
+    rows = ""
+    c_pass = g_pass = tot = 0
+    for r in d["results"]:
+        for field in ("first", "last"):
+            fd = r["fields"][field]
+            truth = tm.get((r["line"], field_key[field])) or ""
+            c, g = fd["claude"], fd["gemini_flash"]
+
+            def cell(read, expected):
+                if not expected:
+                    return f"<td class=nogt>{html.escape(read['name'])}<div class=meta>{read['confidence']}</div></td>", False
+                ok = _match(read["name"], expected)
+                cls = "pass" if ok else "fail"
+                return (f"<td class={cls}>{html.escape(read['name'])}"
+                        f"<div class=meta>{read['confidence']}</div></td>"), ok
+
+            c_html, c_ok = cell(c, truth)
+            g_html, g_ok = cell(g, truth)
+            if truth:
+                tot += 1
+                c_pass += c_ok; g_pass += g_ok
+            rows += (f"<tr><td class=ln>L{r['line']:02d}<div class=meta>{field}</div></td>"
+                     f"<td><img src='/strategies/s14/crop/{html.escape(r['crop'])}' loading=lazy></td>"
+                     f"{c_html}{g_html}"
+                     f"<td class=truth>{html.escape(truth) or '—'}</td></tr>")
+
+    head = (f"<h2>s14 — candidate-list prompt (L35 only)</h2>"
+            f"<p class=meta>{d['reel']} frame {d['frame']:04d} · "
+            f"target lines: {d.get('target_lines')} · "
+            f"Claude {c_pass}/{tot} · Gemini {g_pass}/{tot}</p>"
+            f"<details><summary class=meta>prompt (first name)</summary>"
+            f"<pre style='white-space:pre-wrap;font-size:12px'>{html.escape(d['first_prompt'])}</pre></details>")
+    css = VIEW_CSS + """<style>
+     .s14 img{max-width:520px;max-height:180px;border:1px solid #ddd;border-radius:3px;background:#fff}
+     .s14 td.pass{background:#e6f5d9} .s14 td.fail{background:#fbe6e6}
+     .s14 td.nogt{background:#f6f6f6;color:#333}
+     .s14 td.truth{background:#eef0f5;font-weight:600}
+     .s14 td .meta{font-size:11px;color:#666}
+    </style>"""
+    return (css + "<div class=wrap><h1>Scriptorium — Strategies</h1>"
+            "<p><a href='/'>&larr; API playground</a> &middot; <a href='/view'>consensus view</a> &middot; "
+            "<a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; "
+            "<a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; "
+            "<a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; "
+            "<a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; "
+            "<a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; "
+            "<a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; "
+            "<a href='/strategies/s13'>s13</a> &middot; "
+            "<a href='/strategies/s14' style='font-weight:600'>s14</a> &middot; "
+            "<a href='/strategies/s15'>s15</a></p>"
+            f"{head}"
+            "<div class='tablewrap s14'><table><thead>"
+            "<tr><th>Ln / field</th><th>Crop</th>"
+            "<th>Claude</th><th>Gemini</th><th>Truth</th></tr>"
+            "</thead>"
+            f"<tbody>{rows}</tbody></table></div></div>")
+
+
+@app.route("/strategies/s15/crop/<name>")
+def s15_crop(name):
+    p = S15_DIR / name
+    if not p.exists() or ".." in name or "/" in name:
+        return ("", 404)
+    return send_file(p.resolve(), mimetype="image/png")
+
+
+@app.route("/strategies/s15")
+def s15_view():
+    p = S15_DIR / "results.json"
+    if not p.exists():
+        return VIEW_CSS + "<div class=wrap><h1>s15</h1><p>No results.json yet — run <code>src/strategies/s15.py</code>.</p></div>"
+    d = json.loads(p.read_text())
+    tm = _fresh_truth()
+    field_key = {"first": "interpreted_first_name", "last": "interpreted_last_name"}
+
+    rows = ""
+    c_pass = g_pass = tot = 0
+    for r in d["results"]:
+        for field in ("first", "last"):
+            fd = r["fields"][field]
+            truth = tm.get((r["line"], field_key[field])) or ""
+            c, g = fd["claude"], fd["gemini_flash"]
+
+            def cell(read, expected):
+                if not expected:
+                    return f"<td class=nogt>{html.escape(read['name'])}<div class=meta>{read['confidence']}</div></td>", False
+                ok = _match(read["name"], expected)
+                cls = "pass" if ok else "fail"
+                return (f"<td class={cls}>{html.escape(read['name'])}"
+                        f"<div class=meta>{read['confidence']}</div></td>"), ok
+
+            c_html, c_ok = cell(c, truth)
+            g_html, g_ok = cell(g, truth)
+            if truth:
+                tot += 1
+                c_pass += c_ok; g_pass += g_ok
+            rows += (f"<tr><td class=ln>L{r['line']:02d}<div class=meta>{field}</div></td>"
+                     f"<td><img src='/strategies/s15/crop/{html.escape(r['crop'])}' loading=lazy></td>"
+                     f"{c_html}{g_html}"
+                     f"<td class=truth>{html.escape(truth) or '—'}</td></tr>")
+
+    head = (f"<h2>s15 — full-row crop with demographic-context inference (L35 only)</h2>"
+            f"<p class=meta>{d['reel']} frame {d['frame']:04d} · "
+            f"target lines: {d.get('target_lines')} · "
+            f"Claude {c_pass}/{tot} · Gemini {g_pass}/{tot}</p>"
+            f"<details><summary class=meta>prompt (first name)</summary>"
+            f"<pre style='white-space:pre-wrap;font-size:12px'>{html.escape(d['first_prompt'])}</pre></details>")
+    css = VIEW_CSS + """<style>
+     .s15 img{max-width:900px;max-height:220px;border:1px solid #ddd;border-radius:3px;background:#fff}
+     .s15 td.pass{background:#e6f5d9} .s15 td.fail{background:#fbe6e6}
+     .s15 td.nogt{background:#f6f6f6;color:#333}
+     .s15 td.truth{background:#eef0f5;font-weight:600}
+     .s15 td .meta{font-size:11px;color:#666}
+    </style>"""
+    return (css + "<div class=wrap><h1>Scriptorium — Strategies</h1>"
+            "<p><a href='/'>&larr; API playground</a> &middot; <a href='/view'>consensus view</a> &middot; "
+            "<a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; "
+            "<a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; "
+            "<a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; "
+            "<a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; "
+            "<a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; "
+            "<a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; "
+            "<a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; "
+            "<a href='/strategies/s15' style='font-weight:600'>s15</a> &middot; "
+            "<a href='/strategies/s16'>s16</a></p>"
+            f"{head}"
+            "<div class='tablewrap s15'><table><thead>"
+            "<tr><th>Ln / field</th><th>Crop</th>"
+            "<th>Claude</th><th>Gemini</th><th>Truth</th></tr>"
+            "</thead>"
+            f"<tbody>{rows}</tbody></table></div></div>")
+
+
+@app.route("/strategies/s16/crop/<name>")
+def s16_crop(name):
+    p = S16_DIR / name
+    if not p.exists() or ".." in name or "/" in name:
+        return ("", 404)
+    return send_file(p.resolve(), mimetype="image/png")
+
+
+@app.route("/strategies/s16")
+def s16_view():
+    p = S16_DIR / "results.json"
+    if not p.exists():
+        return VIEW_CSS + "<div class=wrap><h1>s16</h1><p>No results.json yet — run <code>src/strategies/s16.py</code>.</p></div>"
+    d = json.loads(p.read_text())
+    tm = _fresh_truth()
+    field_key = {"first": "interpreted_first_name", "last": "interpreted_last_name"}
+
+    rows = ""
+    c_pass = g_pass = tot = 0
+    for r in d["results"]:
+        for field in ("first", "last"):
+            fd = r["fields"][field]
+            truth = tm.get((r["line"], field_key[field])) or ""
+            c, g = fd["claude"], fd["gemini_flash"]
+
+            def cell(read, expected):
+                if not expected:
+                    return f"<td class=nogt>{html.escape(read['name'])}<div class=meta>{read['confidence']}</div></td>", False
+                ok = _match(read["name"], expected)
+                cls = "pass" if ok else "fail"
+                return (f"<td class={cls}>{html.escape(read['name'])}"
+                        f"<div class=meta>{read['confidence']}</div></td>"), ok
+
+            c_html, c_ok = cell(c, truth)
+            g_html, g_ok = cell(g, truth)
+            if truth:
+                tot += 1
+                c_pass += c_ok; g_pass += g_ok
+            rows += (f"<tr><td class=ln>L{r['line']:02d}<div class=meta>{field}</div></td>"
+                     f"<td><img src='/strategies/s16/crop/{html.escape(r['crop'])}' loading=lazy></td>"
+                     f"{c_html}{g_html}"
+                     f"<td class=truth>{html.escape(truth) or '—'}</td></tr>")
+
+    head = (f"<h2>s16 — s15 full-row context + s13 abbreviation hint (L35 only)</h2>"
+            f"<p class=meta>{d['reel']} frame {d['frame']:04d} · "
+            f"target lines: {d.get('target_lines')} · "
+            f"Claude {c_pass}/{tot} · Gemini {g_pass}/{tot}</p>"
+            f"<details><summary class=meta>prompt (first name)</summary>"
+            f"<pre style='white-space:pre-wrap;font-size:12px'>{html.escape(d['first_prompt'])}</pre></details>")
+    css = VIEW_CSS + """<style>
+     .s16 img{max-width:900px;max-height:220px;border:1px solid #ddd;border-radius:3px;background:#fff}
+     .s16 td.pass{background:#e6f5d9} .s16 td.fail{background:#fbe6e6}
+     .s16 td.nogt{background:#f6f6f6;color:#333}
+     .s16 td.truth{background:#eef0f5;font-weight:600}
+     .s16 td .meta{font-size:11px;color:#666}
+    </style>"""
+    return (css + "<div class=wrap><h1>Scriptorium — Strategies</h1>"
+            "<p><a href='/'>&larr; API playground</a> &middot; <a href='/view'>consensus view</a> &middot; "
+            "<a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; "
+            "<a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; "
+            "<a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; "
+            "<a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; "
+            "<a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; "
+            "<a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; "
+            "<a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; "
+            "<a href='/strategies/s15'>s15</a> &middot; "
+            "<a href='/strategies/s16' style='font-weight:600'>s16</a> &middot; "
+            "<a href='/strategies/s17'>s17</a></p>"
+            f"{head}"
+            "<div class='tablewrap s16'><table><thead>"
+            "<tr><th>Ln / field</th><th>Crop</th>"
+            "<th>Claude</th><th>Gemini</th><th>Truth</th></tr>"
+            "</thead>"
+            f"<tbody>{rows}</tbody></table></div></div>")
+
+
+@app.route("/strategies/s17/crop/<name>")
+def s17_crop(name):
+    p = S17_DIR / name
+    if not p.exists() or ".." in name or "/" in name:
+        return ("", 404)
+    return send_file(p.resolve(), mimetype="image/png")
+
+
+@app.route("/strategies/s17")
+def s17_view():
+    p = S17_DIR / "results.json"
+    if not p.exists():
+        return VIEW_CSS + "<div class=wrap><h1>s17</h1><p>No results.json yet — run <code>src/strategies/s17.py</code>.</p></div>"
+    d = json.loads(p.read_text())
+    tm = _fresh_truth()
+    field_key = {"first": "interpreted_first_name", "last": "interpreted_last_name"}
+
+    rows = ""
+    for r in d["results"]:
+        for field in ("first", "last"):
+            fd = r["fields"][field]
+            truth = tm.get((r["line"], field_key[field])) or ""
+
+            def cell(rec, expected):
+                if not expected:
+                    return f"<td class=nogt>{html.escape(rec['name'])}<div class=meta>{rec['confidence']}<br>{rec['model']}</div></td>"
+                ok = _match(rec["name"], expected)
+                cls = "pass" if ok else "fail"
+                return (f"<td class={cls}>{html.escape(rec['name'])}"
+                        f"<div class=meta>{rec['confidence']}<br>{rec['model']}</div></td>")
+
+            rows += (f"<tr><td class=ln>L{r['line']:02d}<div class=meta>{field}</div></td>"
+                     f"<td><img src='/strategies/s17/crop/{html.escape(r['crop'])}' loading=lazy></td>"
+                     f"{cell(fd['opus'], truth)}{cell(fd['sonnet'], truth)}{cell(fd['haiku'], truth)}"
+                     f"<td class=truth>{html.escape(truth) or '—'}</td></tr>")
+
+    head = (f"<h2>s17 — Claude Opus vs Sonnet vs Haiku on L35 only</h2>"
+            f"<p class=meta>{d['reel']} frame {d['frame']:04d} · "
+            f"target lines: {d.get('target_lines')} · "
+            f"same tight cell crop + simple exact-transcription prompt (s2 baseline)</p>")
+    css = VIEW_CSS + """<style>
+     .s17 img{max-width:520px;max-height:180px;border:1px solid #ddd;border-radius:3px;background:#fff}
+     .s17 td.pass{background:#e6f5d9} .s17 td.fail{background:#fbe6e6}
+     .s17 td.nogt{background:#f6f6f6;color:#333}
+     .s17 td.truth{background:#eef0f5;font-weight:600}
+     .s17 td .meta{font-size:11px;color:#666}
+    </style>"""
+    return (css + "<div class=wrap><h1>Scriptorium — Strategies</h1>"
+            "<p><a href='/'>&larr; API playground</a> &middot; <a href='/view'>consensus view</a> &middot; "
+            "<a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; "
+            "<a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; "
+            "<a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; "
+            "<a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; "
+            "<a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; "
+            "<a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; "
+            "<a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; "
+            "<a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; "
+            "<a href='/strategies/s17' style='font-weight:600'>s17</a> &middot; "
+            "<a href='/strategies/s18'>s18</a></p>"
+            f"{head}"
+            "<div class='tablewrap s17'><table><thead>"
+            "<tr><th>Ln / field</th><th>Crop</th>"
+            "<th>Opus</th><th>Sonnet</th><th>Haiku</th><th>Truth</th></tr>"
+            "</thead>"
+            f"<tbody>{rows}</tbody></table></div></div>")
+
+
+@app.route("/strategies/s18/crop/<name>")
+def s18_crop(name):
+    p = S18_DIR / name
+    if not p.exists() or ".." in name or "/" in name:
+        return ("", 404)
+    return send_file(p.resolve(), mimetype="image/png")
+
+
+@app.route("/strategies/s18")
+def s18_view():
+    p = S18_DIR / "results.json"
+    if not p.exists():
+        return VIEW_CSS + "<div class=wrap><h1>s18</h1><p>No results.json yet — run <code>src/strategies/s18.py</code>.</p></div>"
+    d = json.loads(p.read_text())
+    tm = _fresh_truth()
+    field_key = {"first": "interpreted_first_name", "last": "interpreted_last_name"}
+
+    c_pass = g_pass = tot = 0
+    rows = ""
+    for r in d["results"]:
+        for field in ("first", "last"):
+            fd = r["fields"][field]
+            truth = tm.get((r["line"], field_key[field])) or ""
+            c, g = fd["claude"], fd["gemini_flash"]
+
+            def cell(rec, expected):
+                cands = rec.get("candidates") or []
+                cand_html = ""
+                if cands:
+                    items = "".join(
+                        f"<li><b>{html.escape(str(k.get('reading','?')))}</b>"
+                        f" — <span class=why>{html.escape(str(k.get('why','')))}</span></li>"
+                        for k in cands)
+                    cand_html = (f"<details><summary>{len(cands)} candidates</summary>"
+                                 f"<ol style='padding-left:18px;margin:4px 0'>{items}</ol></details>")
+                if not expected:
+                    return f"<td class=nogt>{html.escape(rec['final'])}<div class=meta>{rec['confidence']}</div>{cand_html}</td>", False
+                ok = _match(rec["final"], expected)
+                cls = "pass" if ok else "fail"
+                return (f"<td class={cls}>{html.escape(rec['final'])}"
+                        f"<div class=meta>{rec['confidence']}</div>{cand_html}</td>"), ok
+
+            c_html, c_ok = cell(c, truth)
+            g_html, g_ok = cell(g, truth)
+            if truth:
+                tot += 1
+                c_pass += c_ok; g_pass += g_ok
+            rows += (f"<tr><td class=ln>L{r['line']:02d}<div class=meta>{field}</div></td>"
+                     f"<td><img src='/strategies/s18/crop/{html.escape(r['crop'])}' loading=lazy></td>"
+                     f"{c_html}{g_html}"
+                     f"<td class=truth>{html.escape(truth) or '—'}</td></tr>")
+
+    head = (f"<h2>s18 — enumerate 3 candidates before committing (generic)</h2>"
+            f"<p class=meta>{d['reel']} frame {d['frame']:04d} · "
+            f"Claude {c_pass}/{tot} · Gemini {g_pass}/{tot} · "
+            f"click 'N candidates' to see each model's ranked alternatives</p>")
+    css = VIEW_CSS + """<style>
+     .s18 img{max-width:520px;max-height:180px;border:1px solid #ddd;border-radius:3px;background:#fff}
+     .s18 td.pass{background:#e6f5d9} .s18 td.fail{background:#fbe6e6}
+     .s18 td.nogt{background:#f6f6f6;color:#333}
+     .s18 td.truth{background:#eef0f5;font-weight:600}
+     .s18 td .meta{font-size:11px;color:#666}
+     .s18 details{font-size:11px;color:#444;margin-top:4px}
+     .s18 details summary{cursor:pointer;color:#666}
+     .s18 .why{color:#555;font-style:italic}
+    </style>"""
+    return (css + "<div class=wrap><h1>Scriptorium — Strategies</h1>"
+            "<p><a href='/'>&larr; API playground</a> &middot; <a href='/view'>consensus view</a> &middot; "
+            "<a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; "
+            "<a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; "
+            "<a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; "
+            "<a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; "
+            "<a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; "
+            "<a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; "
+            "<a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; "
+            "<a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; "
+            "<a href='/strategies/s17'>s17</a> &middot; "
+            "<a href='/strategies/s18' style='font-weight:600'>s18</a> &middot; "
+            "<a href='/strategies/s19'>s19</a></p>"
+            f"{head}"
+            "<div class='tablewrap s18'><table><thead>"
+            "<tr><th>Ln / field</th><th>Crop</th>"
+            "<th>Claude</th><th>Gemini</th><th>Truth</th></tr>"
+            "</thead>"
+            f"<tbody>{rows}</tbody></table></div></div>")
+
+
+@app.route("/strategies/s19/crop/<name>")
+def s19_crop(name):
+    p = S19_DIR / name
+    if not p.exists() or ".." in name or "/" in name:
+        return ("", 404)
+    return send_file(p.resolve(), mimetype="image/png")
+
+
+@app.route("/strategies/s19")
+def s19_view():
+    p = S19_DIR / "results.json"
+    if not p.exists():
+        return VIEW_CSS + "<div class=wrap><h1>s19</h1><p>No results.json yet — run <code>src/strategies/s19.py</code>.</p></div>"
+    d = json.loads(p.read_text())
+    tm = _fresh_truth()
+    field_key = {"first": "interpreted_first_name", "last": "interpreted_last_name"}
+    models = ("opus", "sonnet", "haiku")
+    labels = {"opus": "Opus", "sonnet": "Sonnet", "haiku": "Haiku"}
+    tallies = {m: {"first": 0, "last": 0} for m in models}
+    tot_first = tot_last = 0
+
+    rows = ""
+    for r in d["results"]:
+        for field in ("first", "last"):
+            fd = r["fields"][field]
+            truth = tm.get((r["line"], field_key[field])) or ""
+
+            def cell(rec, expected):
+                if not expected:
+                    return f"<td class=nogt>{html.escape(rec['name'])}<div class=meta>{rec['confidence']}</div></td>", False
+                ok = _match(rec["name"], expected)
+                cls = "pass" if ok else "fail"
+                return (f"<td class={cls}>{html.escape(rec['name'])}"
+                        f"<div class=meta>{rec['confidence']}</div></td>"), ok
+
+            cells_html = ""
+            for m in models:
+                cell_html, ok = cell(fd[m], truth)
+                cells_html += cell_html
+                if truth:
+                    tallies[m][field] += ok
+            if truth:
+                if field == "first": tot_first += 1
+                else: tot_last += 1
+            rows += (f"<tr><td class=ln>L{r['line']:02d}<div class=meta>{field}</div></td>"
+                     f"<td><img src='/strategies/s19/crop/{html.escape(r['crop'])}' loading=lazy></td>"
+                     f"{cells_html}"
+                     f"<td class=truth>{html.escape(truth) or '—'}</td></tr>")
+
+    tally_line = " · ".join(
+        f"{labels[m]} first {tallies[m]['first']}/{tot_first} · last {tallies[m]['last']}/{tot_last}"
+        for m in models)
+    mm = d.get("models", {})
+    head = (f"<h2>s19 — Claude Opus vs Sonnet vs Haiku on full fixture (no Gemini)</h2>"
+            f"<p class=meta>{d['reel']} frame {d['frame']:04d} · {tally_line}</p>"
+            f"<p class=meta>models: opus={html.escape(str(mm.get('opus','')))} · "
+            f"sonnet={html.escape(str(mm.get('sonnet','')))} · "
+            f"haiku={html.escape(str(mm.get('haiku','')))}</p>")
+    css = VIEW_CSS + """<style>
+     .s19 img{max-width:520px;max-height:180px;border:1px solid #ddd;border-radius:3px;background:#fff}
+     .s19 td.pass{background:#e6f5d9} .s19 td.fail{background:#fbe6e6}
+     .s19 td.nogt{background:#f6f6f6;color:#333}
+     .s19 td.truth{background:#eef0f5;font-weight:600}
+     .s19 td .meta{font-size:11px;color:#666}
+     .s19 th.grp{background:#e6ded0}
+    </style>"""
+    return (css + "<div class=wrap><h1>Scriptorium — Strategies</h1>"
+            "<p><a href='/'>&larr; API playground</a> &middot; <a href='/view'>consensus view</a> &middot; "
+            "<a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; "
+            "<a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; "
+            "<a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; "
+            "<a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; "
+            "<a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; "
+            "<a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; "
+            "<a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; "
+            "<a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; "
+            "<a href='/strategies/s17'>s17</a> &middot; <a href='/strategies/s18'>s18</a> &middot; "
+            "<a href='/strategies/s19' style='font-weight:600'>s19</a> &middot; "
+            "<a href='/strategies/s20'>s20</a></p>"
+            f"{head}"
+            "<div class='tablewrap s19'><table><thead>"
+            "<tr><th>Ln / field</th><th>Crop</th>"
+            "<th>Opus</th><th>Sonnet</th><th>Haiku</th><th>Truth</th></tr>"
+            "</thead>"
+            f"<tbody>{rows}</tbody></table></div></div>")
+
+
+@app.route("/strategies/s20/crop/<name>")
+def s20_crop(name):
+    p = S20_DIR / name
+    if not p.exists() or ".." in name or "/" in name:
+        return ("", 404)
+    return send_file(p.resolve(), mimetype="image/png")
+
+
+@app.route("/strategies/s20")
+def s20_view():
+    p = S20_DIR / "results.json"
+    if not p.exists():
+        return VIEW_CSS + "<div class=wrap><h1>s20</h1><p>No results.json yet — run <code>src/strategies/s20.py</code>.</p></div>"
+    d = json.loads(p.read_text())
+    tm = _fresh_truth()
+    field_key = {"first": "interpreted_first_name", "last": "interpreted_last_name"}
+
+    tallies = {"claude": 0, "gemini_flash": 0}
+    tot = 0
+    calibration = {"claude": {"low_when_wrong": 0, "review_when_wrong": 0,
+                              "low_when_right": 0, "review_when_right": 0,
+                              "n_wrong": 0, "n_right": 0},
+                   "gemini_flash": {"low_when_wrong": 0, "review_when_wrong": 0,
+                                    "low_when_right": 0, "review_when_right": 0,
+                                    "n_wrong": 0, "n_right": 0}}
+
+    rows = ""
+    for r in d["results"]:
+        for field in ("first", "last"):
+            fd = r["fields"][field]
+            truth = tm.get((r["line"], field_key[field])) or ""
+
+            def cell(rec, expected, model_key):
+                nr = rec.get("needs_review", False)
+                conf = rec.get("confidence", "?")
+                if not expected:
+                    return f"<td class=nogt>{html.escape(rec['name'])}<div class=meta>{conf}{' · ⚑' if nr else ''}</div></td>", False, None
+                ok = _match(rec["name"], expected)
+                cls = "pass" if ok else "fail"
+                badge = " · ⚑ review" if nr else ""
+                return (f"<td class={cls}>{html.escape(rec['name'])}"
+                        f"<div class=meta>{conf}{badge}</div></td>"), ok, {
+                    "conf": conf, "nr": nr, "ok": ok}
+
+            c_html, c_ok, c_info = cell(fd["claude"], truth, "claude")
+            g_html, g_ok, g_info = cell(fd["gemini_flash"], truth, "gemini_flash")
+
+            if truth:
+                tot += 1
+                tallies["claude"] += c_ok
+                tallies["gemini_flash"] += g_ok
+                for m, info in (("claude", c_info), ("gemini_flash", g_info)):
+                    if info is None: continue
+                    is_low = info["conf"] == "LOW"
+                    if info["ok"]:
+                        calibration[m]["n_right"] += 1
+                        if is_low: calibration[m]["low_when_right"] += 1
+                        if info["nr"]: calibration[m]["review_when_right"] += 1
+                    else:
+                        calibration[m]["n_wrong"] += 1
+                        if is_low: calibration[m]["low_when_wrong"] += 1
+                        if info["nr"]: calibration[m]["review_when_wrong"] += 1
+
+            rows += (f"<tr><td class=ln>L{r['line']:02d}<div class=meta>{field}</div></td>"
+                     f"<td><img src='/strategies/s20/crop/{html.escape(r['crop'])}' loading=lazy></td>"
+                     f"{c_html}{g_html}"
+                     f"<td class=truth>{html.escape(truth) or '—'}</td></tr>")
+
+    def cal_line(m):
+        cal = calibration[m]
+        return (f"{cal['low_when_wrong']}/{cal['n_wrong']} wrong-flagged-LOW · "
+                f"{cal['review_when_wrong']}/{cal['n_wrong']} wrong-flagged-review · "
+                f"{cal['low_when_right']}/{cal['n_right']} right-flagged-LOW · "
+                f"{cal['review_when_right']}/{cal['n_right']} right-flagged-review")
+
+    head = (f"<h2>s20 — calibration rubric + needs_review flag</h2>"
+            f"<p class=meta>{d['reel']} frame {d['frame']:04d} · "
+            f"Claude {tallies['claude']}/{tot} · Gemini {tallies['gemini_flash']}/{tot}</p>"
+            f"<p class=meta>Claude calibration: {cal_line('claude')}</p>"
+            f"<p class=meta>Gemini calibration: {cal_line('gemini_flash')}</p>"
+            f"<p class=meta>⚑ = needs_review flag set. Ideal: wrong-flagged-LOW / "
+            f"wrong-flagged-review should be HIGH (model knows when it's wrong); "
+            f"right-flagged-LOW / right-flagged-review should be LOW (not over-cautious).</p>")
+    css = VIEW_CSS + """<style>
+     .s20 img{max-width:520px;max-height:180px;border:1px solid #ddd;border-radius:3px;background:#fff}
+     .s20 td.pass{background:#e6f5d9} .s20 td.fail{background:#fbe6e6}
+     .s20 td.nogt{background:#f6f6f6;color:#333}
+     .s20 td.truth{background:#eef0f5;font-weight:600}
+     .s20 td .meta{font-size:11px;color:#666}
+    </style>"""
+    return (css + "<div class=wrap><h1>Scriptorium — Strategies</h1>"
+            "<p><a href='/'>&larr; API playground</a> &middot; <a href='/view'>consensus view</a> &middot; "
+            "<a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; "
+            "<a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; "
+            "<a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; "
+            "<a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; "
+            "<a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; "
+            "<a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; "
+            "<a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; "
+            "<a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; "
+            "<a href='/strategies/s17'>s17</a> &middot; <a href='/strategies/s18'>s18</a> &middot; "
+            "<a href='/strategies/s19'>s19</a> &middot; "
+            "<a href='/strategies/s20' style='font-weight:600'>s20</a> &middot; "
+            "<a href='/strategies/s21'>s21</a></p>"
+            f"{head}"
+            "<div class='tablewrap s20'><table><thead>"
+            "<tr><th>Ln / field</th><th>Crop</th>"
+            "<th>Claude</th><th>Gemini</th><th>Truth</th></tr>"
+            "</thead>"
+            f"<tbody>{rows}</tbody></table></div></div>")
+
+
+@app.route("/strategies/s21/crop/<name>")
+def s21_crop(name):
+    p = S21_DIR / name
+    if not p.exists() or ".." in name or "/" in name:
+        return ("", 404)
+    return send_file(p.resolve(), mimetype="image/png")
+
+
+@app.route("/strategies/s21")
+def s21_view():
+    p = S21_DIR / "results.json"
+    if not p.exists():
+        return VIEW_CSS + "<div class=wrap><h1>s21</h1><p>No results.json yet — run <code>src/strategies/s21.py</code>.</p></div>"
+    d = json.loads(p.read_text())
+    tm = _fresh_truth()
+    field_key = {"first": "interpreted_first_name", "last": "interpreted_last_name"}
+
+    tally_pass = 0
+    tot = 0
+    cal = {"low_when_wrong": 0, "review_when_wrong": 0, "n_wrong": 0,
+           "low_when_right": 0, "review_when_right": 0, "n_right": 0}
+
+    rows = ""
+    for r in d["results"]:
+        for field in ("first", "last"):
+            fd = r["fields"][field]
+            truth = tm.get((r["line"], field_key[field])) or ""
+            c = fd["claude"]
+            nr = c.get("needs_review", False)
+            conf = c.get("confidence", "?")
+            if not truth:
+                cell_html = f"<td class=nogt>{html.escape(c['name'])}<div class=meta>{conf}{' · ⚑' if nr else ''}</div></td>"
+            else:
+                tot += 1
+                ok = _match(c["name"], truth)
+                tally_pass += ok
+                cls = "pass" if ok else "fail"
+                badge = " · ⚑ review" if nr else ""
+                cell_html = (f"<td class={cls}>{html.escape(c['name'])}"
+                             f"<div class=meta>{conf}{badge}</div></td>")
+                if ok:
+                    cal["n_right"] += 1
+                    if conf == "LOW": cal["low_when_right"] += 1
+                    if nr: cal["review_when_right"] += 1
+                else:
+                    cal["n_wrong"] += 1
+                    if conf == "LOW": cal["low_when_wrong"] += 1
+                    if nr: cal["review_when_wrong"] += 1
+
+            rows += (f"<tr><td class=ln>L{r['line']:02d}<div class=meta>{field}</div></td>"
+                     f"<td><img src='/strategies/s21/crop/{html.escape(r['crop'])}' loading=lazy></td>"
+                     f"{cell_html}"
+                     f"<td class=truth>{html.escape(truth) or '—'}</td></tr>")
+
+    head = (f"<h2>s21 — calibration + familiar-name red flag + stroke verify (Claude only)</h2>"
+            f"<p class=meta>{d['reel']} frame {d['frame']:04d} · Claude {tally_pass}/{tot}</p>"
+            f"<p class=meta>calibration: {cal['low_when_wrong']}/{cal['n_wrong']} wrong-LOW · "
+            f"{cal['review_when_wrong']}/{cal['n_wrong']} wrong-review · "
+            f"{cal['low_when_right']}/{cal['n_right']} right-LOW · "
+            f"{cal['review_when_right']}/{cal['n_right']} right-review</p>")
+    css = VIEW_CSS + """<style>
+     .s21 img{max-width:520px;max-height:180px;border:1px solid #ddd;border-radius:3px;background:#fff}
+     .s21 td.pass{background:#e6f5d9} .s21 td.fail{background:#fbe6e6}
+     .s21 td.nogt{background:#f6f6f6;color:#333}
+     .s21 td.truth{background:#eef0f5;font-weight:600}
+     .s21 td .meta{font-size:11px;color:#666}
+    </style>"""
+    return (css + "<div class=wrap><h1>Scriptorium — Strategies</h1>"
+            "<p><a href='/'>&larr; API playground</a> &middot; <a href='/view'>consensus view</a> &middot; "
+            "<a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; "
+            "<a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; "
+            "<a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; "
+            "<a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; "
+            "<a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; "
+            "<a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; "
+            "<a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; "
+            "<a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; "
+            "<a href='/strategies/s17'>s17</a> &middot; <a href='/strategies/s18'>s18</a> &middot; "
+            "<a href='/strategies/s19'>s19</a> &middot; <a href='/strategies/s20'>s20</a> &middot; "
+            "<a href='/strategies/s21' style='font-weight:600'>s21</a> &middot; "
+            "<a href='/strategies/s22'>s22</a></p>"
+            f"{head}"
+            "<div class='tablewrap s21'><table><thead>"
+            "<tr><th>Ln / field</th><th>Crop</th>"
+            "<th>Claude</th><th>Truth</th></tr>"
+            "</thead>"
+            f"<tbody>{rows}</tbody></table></div></div>")
+
+
+@app.route("/strategies/s22/crop/<name>")
+def s22_crop(name):
+    p = S22_DIR / name
+    if not p.exists() or ".." in name or "/" in name:
+        return ("", 404)
+    return send_file(p.resolve(), mimetype="image/png")
+
+
+@app.route("/strategies/s22")
+def s22_view():
+    p = S22_DIR / "results.json"
+    if not p.exists():
+        return VIEW_CSS + "<div class=wrap><h1>s22</h1><p>No results.json yet — run <code>src/strategies/s22.py</code>.</p></div>"
+    d = json.loads(p.read_text())
+    tm = _fresh_truth()
+    field_key = {"first": "interpreted_first_name", "last": "interpreted_last_name"}
+
+    tally_pass = 0
+    tot = 0
+    cal = {"low_when_wrong": 0, "review_when_wrong": 0, "n_wrong": 0,
+           "low_when_right": 0, "review_when_right": 0, "n_right": 0}
+
+    rows = ""
+    for r in d["results"]:
+        for field in ("first", "last"):
+            fd = r["fields"][field]
+            truth = tm.get((r["line"], field_key[field])) or ""
+            c = fd["fable_5"]
+            nr = c.get("needs_review", False)
+            conf = c.get("confidence", "?")
+            if not truth:
+                cell_html = f"<td class=nogt>{html.escape(c['name'])}<div class=meta>{conf}{' · ⚑' if nr else ''}</div></td>"
+            else:
+                tot += 1
+                ok = _match(c["name"], truth)
+                tally_pass += ok
+                cls = "pass" if ok else "fail"
+                badge = " · ⚑ review" if nr else ""
+                cell_html = (f"<td class={cls}>{html.escape(c['name'])}"
+                             f"<div class=meta>{conf}{badge}</div></td>")
+                if ok:
+                    cal["n_right"] += 1
+                    if conf == "LOW": cal["low_when_right"] += 1
+                    if nr: cal["review_when_right"] += 1
+                else:
+                    cal["n_wrong"] += 1
+                    if conf == "LOW": cal["low_when_wrong"] += 1
+                    if nr: cal["review_when_wrong"] += 1
+
+            rows += (f"<tr><td class=ln>L{r['line']:02d}<div class=meta>{field}</div></td>"
+                     f"<td><img src='/strategies/s22/crop/{html.escape(r['crop'])}' loading=lazy></td>"
+                     f"{cell_html}"
+                     f"<td class=truth>{html.escape(truth) or '—'}</td></tr>")
+
+    mm = d.get("models", {})
+    head = (f"<h2>s22 — s21 rubric on {html.escape(str(mm.get('fable_5','')))} (no Opus)</h2>"
+            f"<p class=meta>{d['reel']} frame {d['frame']:04d} · Fable-5 {tally_pass}/{tot}</p>"
+            f"<p class=meta>calibration: {cal['low_when_wrong']}/{cal['n_wrong']} wrong-LOW · "
+            f"{cal['review_when_wrong']}/{cal['n_wrong']} wrong-review · "
+            f"{cal['low_when_right']}/{cal['n_right']} right-LOW · "
+            f"{cal['review_when_right']}/{cal['n_right']} right-review</p>")
+    css = VIEW_CSS + """<style>
+     .s22 img{max-width:520px;max-height:180px;border:1px solid #ddd;border-radius:3px;background:#fff}
+     .s22 td.pass{background:#e6f5d9} .s22 td.fail{background:#fbe6e6}
+     .s22 td.nogt{background:#f6f6f6;color:#333}
+     .s22 td.truth{background:#eef0f5;font-weight:600}
+     .s22 td .meta{font-size:11px;color:#666}
+    </style>"""
+    return (css + "<div class=wrap><h1>Scriptorium — Strategies</h1>"
+            "<p><a href='/'>&larr; API playground</a> &middot; <a href='/view'>consensus view</a> &middot; "
+            "<a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; "
+            "<a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; "
+            "<a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; "
+            "<a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; "
+            "<a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; "
+            "<a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; "
+            "<a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; "
+            "<a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; "
+            "<a href='/strategies/s17'>s17</a> &middot; <a href='/strategies/s18'>s18</a> &middot; "
+            "<a href='/strategies/s19'>s19</a> &middot; <a href='/strategies/s20'>s20</a> &middot; "
+            "<a href='/strategies/s21'>s21</a> &middot; "
+            "<a href='/strategies/s22' style='font-weight:600'>s22</a> &middot; "
+            "<a href='/strategies/s23'>s23</a></p>"
+            f"{head}"
+            "<div class='tablewrap s22'><table><thead>"
+            "<tr><th>Ln / field</th><th>Crop</th>"
+            "<th>Fable-5</th><th>Truth</th></tr>"
+            "</thead>"
+            f"<tbody>{rows}</tbody></table></div></div>")
+
+
+@app.route("/strategies/s23/crop/<name>")
+def s23_crop(name):
+    p = S23_DIR / name
+    if not p.exists() or ".." in name or "/" in name:
+        return ("", 404)
+    return send_file(p.resolve(), mimetype="image/png")
+
+
+@app.route("/strategies/s23")
+def s23_view():
+    p = S23_DIR / "results.json"
+    if not p.exists():
+        return VIEW_CSS + "<div class=wrap><h1>s23</h1><p>No results.json yet — run <code>src/strategies/s23.py</code>.</p></div>"
+    d = json.loads(p.read_text())
+    tm = _fresh_truth()
+    rows = ""
+    passes = tot = 0
+    for r in d["results"]:
+        truth = _truth_combined(tm, r["line"]) or r.get("truth", "")
+        rec = r["fable_5"]
+        conf = rec.get("confidence", "?")
+        if truth:
+            tot += 1
+            ok = _match(rec["name"], truth)
+            passes += ok
+            cls = "pass" if ok else "fail"
+        else:
+            cls = "nogt"
+        rows += (f"<tr><td class=ln>L{r['line']:02d}</td>"
+                 f"<td><img src='/strategies/s23/crop/{html.escape(r['crop'])}' loading=lazy></td>"
+                 f"<td class={cls}>{html.escape(rec['name'])}<div class=meta>{conf}</div></td>"
+                 f"<td class=truth>{html.escape(truth) or '—'}</td></tr>")
+    mm = d.get("models", {})
+    head = (f"<h2>s23 — combined-name read on {html.escape(str(mm.get('fable_5','')))} only</h2>"
+            f"<p class=meta>{d['reel']} frame {d['frame']:04d} · Fable-5 {passes}/{tot} · "
+            f"one call per row (half the cost of s2-shape split-name)</p>")
+    css = VIEW_CSS + """<style>
+     .s23 img{max-width:520px;max-height:180px;border:1px solid #ddd;border-radius:3px;background:#fff}
+     .s23 td.pass{background:#e6f5d9} .s23 td.fail{background:#fbe6e6}
+     .s23 td.nogt{background:#f6f6f6;color:#333}
+     .s23 td.truth{background:#eef0f5;font-weight:600}
+     .s23 td .meta{font-size:11px;color:#666}
+    </style>"""
+    return (css + "<div class=wrap><h1>Scriptorium — Strategies</h1>"
+            "<p><a href='/'>&larr; API playground</a> &middot; <a href='/view'>consensus view</a> &middot; "
+            "<a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; "
+            "<a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; "
+            "<a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; "
+            "<a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; "
+            "<a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; "
+            "<a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; "
+            "<a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; "
+            "<a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; "
+            "<a href='/strategies/s17'>s17</a> &middot; <a href='/strategies/s18'>s18</a> &middot; "
+            "<a href='/strategies/s19'>s19</a> &middot; <a href='/strategies/s20'>s20</a> &middot; "
+            "<a href='/strategies/s21'>s21</a> &middot; <a href='/strategies/s22'>s22</a> &middot; "
+            "<a href='/strategies/s23' style='font-weight:600'>s23</a></p>"
+            f"{head}"
+            "<div class='tablewrap s23'><table><thead>"
+            "<tr><th>Ln</th><th>Crop</th>"
+            "<th>Fable-5</th><th>Truth</th></tr>"
             "</thead>"
             f"<tbody>{rows}</tbody></table></div></div>")
 
