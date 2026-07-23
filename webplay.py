@@ -48,7 +48,7 @@ PAGE = """<!doctype html><html><head><meta charset=utf-8><title>Gemini Playgroun
  @keyframes spin{{to{{transform:rotate(360deg)}}}}
 </style></head><body>
 <h1>Gemini Playground &mdash; 1850 Census</h1>
-<p><a href="/view">View transcribed output</a> &middot; Strategies: <a href="/strategies/s1">s1</a> &middot; <a href="/strategies/s2">s2</a> &middot; <a href="/strategies/s3">s3</a> &middot; <a href="/strategies/s4">s4</a> &middot; <a href="/strategies/s5">s5</a> &middot; <a href="/strategies/s6">s6</a> &middot; <a href="/strategies/s7">s7</a> &middot; <a href="/strategies/s8">s8</a> &middot; <a href="/strategies/s9">s9</a> &middot; <a href="/strategies/s10">s10</a> &middot; <a href="/strategies/s11">s11</a> &middot; <a href="/strategies/s12">s12</a> &middot; <a href="/strategies/s13">s13</a> &middot; <a href="/strategies/s14">s14</a> &middot; <a href="/strategies/s15">s15</a> &middot; <a href="/strategies/s16">s16</a> &middot; <a href="/strategies/s17">s17</a> &middot; <a href="/strategies/s18">s18</a> &middot; <a href="/strategies/s19">s19</a> &middot; <a href="/strategies/s20">s20</a> &middot; <a href="/strategies/s21">s21</a> &middot; <a href="/strategies/s22">s22</a> &middot; <a href="/strategies/s23">s23</a></p>
+<p><a href="/view">View transcribed output</a> &middot; <a href="/pipeline_v2">pipeline_v2</a> &middot; Strategies: <a href="/strategies/s1">s1</a> &middot; <a href="/strategies/s2">s2</a> &middot; <a href="/strategies/s3">s3</a> &middot; <a href="/strategies/s4">s4</a> &middot; <a href="/strategies/s5">s5</a> &middot; <a href="/strategies/s6">s6</a> &middot; <a href="/strategies/s7">s7</a> &middot; <a href="/strategies/s8">s8</a> &middot; <a href="/strategies/s9">s9</a> &middot; <a href="/strategies/s10">s10</a> &middot; <a href="/strategies/s11">s11</a> &middot; <a href="/strategies/s12">s12</a> &middot; <a href="/strategies/s13">s13</a> &middot; <a href="/strategies/s14">s14</a> &middot; <a href="/strategies/s15">s15</a> &middot; <a href="/strategies/s16">s16</a> &middot; <a href="/strategies/s17">s17</a> &middot; <a href="/strategies/s18">s18</a> &middot; <a href="/strategies/s19">s19</a> &middot; <a href="/strategies/s20">s20</a> &middot; <a href="/strategies/s21">s21</a> &middot; <a href="/strategies/s22">s22</a> &middot; <a href="/strategies/s23">s23</a></p>
 <form method=post>
  <div class=row>
   <div><label>Model</label><select name=model>{model_opts}</select></div>
@@ -238,6 +238,7 @@ def view(frame=None):
     body = render_view(frame)
     return (VIEW_CSS + "<div class=wrap><h1>Scriptorium Output</h1>"
             "<p><a href='/'>&larr; API playground</a> &middot; "
+            "<a href='/pipeline_v2'>pipeline_v2</a> &middot; "
             "Strategies: <a href='/strategies/s1'>s1</a> &middot; <a href='/strategies/s2'>s2</a> &middot; <a href='/strategies/s3'>s3</a> &middot; <a href='/strategies/s4'>s4</a> &middot; <a href='/strategies/s5'>s5</a> &middot; <a href='/strategies/s6'>s6</a> &middot; <a href='/strategies/s7'>s7</a> &middot; <a href='/strategies/s8'>s8</a> &middot; <a href='/strategies/s9'>s9</a> &middot; <a href='/strategies/s10'>s10</a> &middot; <a href='/strategies/s11'>s11</a> &middot; <a href='/strategies/s12'>s12</a> &middot; <a href='/strategies/s13'>s13</a> &middot; <a href='/strategies/s14'>s14</a> &middot; <a href='/strategies/s15'>s15</a> &middot; <a href='/strategies/s16'>s16</a> &middot; <a href='/strategies/s17'>s17</a> &middot; <a href='/strategies/s18'>s18</a> &middot; <a href='/strategies/s19'>s19</a> &middot; <a href='/strategies/s20'>s20</a> &middot; <a href='/strategies/s21'>s21</a> &middot; <a href='/strategies/s22'>s22</a> &middot; <a href='/strategies/s23'>s23</a> &middot; <a href='/strategies/s15'>s15</a></p>"
             f"<p class=nav>Pages: {nav}</p>{body}</div>")
 
@@ -2206,6 +2207,164 @@ def s23_view():
             "<th>Fable-5</th><th>Truth</th></tr>"
             "</thead>"
             f"<tbody>{rows}</tbody></table></div></div>")
+
+
+@app.route("/pipeline_v2")
+@app.route("/pipeline_v2/<int:frame>")
+def pipeline_v2_view(frame=None):
+    """View pipeline_v2 output for one frame: full row table with escalation
+    badges + ground-truth pass/fail highlighting on the fixture cells.
+
+    Optional query param `?partial=<suffix>` loads a partial run written by
+    `pipeline_v2 --lines ...` (filename `_<frame>.pipeline_v2.partial.<suffix>.json`).
+    """
+    reel = REEL
+    partial = request.args.get("partial", "").strip() or None
+
+    files = sorted(OUT.glob(f"{reel}_*.pipeline_v2.json"))
+    if not files:
+        return VIEW_CSS + ("<div class=wrap><h1>pipeline_v2</h1>"
+                           "<p>No pipeline_v2 output yet. Run "
+                           "<code>src/pipeline_v2.py</code>.</p></div>")
+    frames_avail = sorted({
+        int(p.name.replace(".pipeline_v2.json", "").split("_")[-1])
+        for p in files})
+    if frame is None:
+        frame = frames_avail[0]
+    if partial:
+        p = OUT / f"{reel}_{int(frame):04d}.pipeline_v2.partial.{partial}.json"
+    else:
+        p = OUT / f"{reel}_{int(frame):04d}.pipeline_v2.json"
+    if not p.exists():
+        return VIEW_CSS + (f"<p>No pipeline_v2 output for frame {frame}"
+                           + (f" partial={partial}" if partial else "")
+                           + f" (looked for {p.name}).</p>")
+
+    d = json.loads(p.read_text())
+    tm = _fresh_truth()
+    truth_row_map = {}
+    for k, v in tm.items():
+        line, field = k
+        truth_row_map.setdefault(str(line), {})[field] = v
+
+    meta = d.get("metadata", {}) or {}
+    models = d.get("models", {})
+
+    def _cell_html(row, field):
+        val = row.get(field)
+        display = html.escape(str(val)) if val not in (None, "") else ""
+        # Fixture ground truth if any → pass/fail highlight
+        gt = truth_row_map.get(row["line_number"], {}).get(field)
+        extras = ""
+        cls = ""
+        if field in ("interpreted_first_name", "interpreted_last_name"):
+            meta_key = "_first_name_meta" if field == "interpreted_first_name" else "_last_name_meta"
+            m = row.get(meta_key, {}) or {}
+            conf = m.get("confidence")
+            escalated = m.get("escalated")
+            needs_review = m.get("needs_review")
+            badges = []
+            if escalated:
+                badges.append("<span class=badge-fable>FABLE</span>")
+            if conf == "LOW":
+                badges.append("<span class=badge-low>LOW</span>")
+            elif conf == "MEDIUM":
+                badges.append("<span class=badge-med>MED</span>")
+            if needs_review:
+                badges.append("<span class=badge-rev>⚑</span>")
+            if badges:
+                extras = "<div class=badges>" + " ".join(badges) + "</div>"
+            # If escalated, show the original Opus read
+            opus_read = m.get("opus_read") or {}
+            if opus_read.get("name") and opus_read["name"] != val:
+                extras += (f"<div class=opus-orig>opus: "
+                           f"{html.escape(str(opus_read['name']))}</div>")
+        if gt is not None:
+            cls = "pass" if _match(val, gt) else "fail"
+        return f'<td class="{cls}">{display}{extras}</td>'
+
+    trs = ""
+    for row in d.get("rows", []):
+        if row.get("_missing"):
+            trs += (f'<tr class=missing><td class=ln>{row["line_number"]}</td>'
+                    + "<td colspan=14 class=meta>(band not read)</td></tr>")
+            continue
+        tds = "".join(_cell_html(row, f) for f, _ in VIEW_COLS)
+        trs += f'<tr><td class=ln>{row["line_number"]}</td>{tds}</tr>'
+
+    ths = "".join(f"<th>{lbl}</th>" for _, lbl in VIEW_COLS)
+
+    # Escalation summary
+    n_escalated = sum(1 for r in d.get("rows", [])
+                      for m in ((r.get("_first_name_meta") or {}),
+                                (r.get("_last_name_meta") or {}))
+                      if m.get("escalated"))
+    n_low = sum(1 for r in d.get("rows", [])
+                for m in ((r.get("_first_name_meta") or {}),
+                          (r.get("_last_name_meta") or {}))
+                if m.get("confidence") == "LOW")
+
+    # Fixture score
+    tot = correct = 0
+    for r in d.get("rows", []):
+        for field in ("interpreted_first_name", "interpreted_last_name"):
+            gt = truth_row_map.get(r["line_number"], {}).get(field)
+            if gt is None: continue
+            tot += 1
+            if _match(r.get(field), gt): correct += 1
+
+    nav = " ".join(
+        f'<a class="{"on" if int(fr) == int(frame) else ""}" href="/pipeline_v2/{fr}">{fr:04d}</a>'
+        for fr in frames_avail)
+    # discover partial runs for the CURRENT frame
+    partial_files = sorted(OUT.glob(
+        f"{reel}_{int(frame):04d}.pipeline_v2.partial.*.json"))
+    partial_suffixes = [pf.name.replace(f"{reel}_{int(frame):04d}.pipeline_v2.partial.", "")
+                          .replace(".json", "") for pf in partial_files]
+    partial_nav = ""
+    if partial_suffixes:
+        parts = []
+        parts.append(f'<a class="{"on" if not partial else ""}" '
+                     f'href="/pipeline_v2/{int(frame)}">full</a>')
+        for suffix in partial_suffixes:
+            parts.append(f'<a class="{"on" if partial == suffix else ""}" '
+                         f'href="/pipeline_v2/{int(frame)}?partial={suffix}">'
+                         f'partial: {suffix}</a>')
+        partial_nav = f'<p class=nav>Runs for {int(frame):04d}: {" ".join(parts)}</p>'
+    head = (f"<h2>pipeline_v2 &mdash; frame {int(frame):04d} &mdash; "
+            f"{html.escape(str(meta.get('location_town') or '?'))}, "
+            f"{html.escape(str(meta.get('location_county') or '?'))} County</h2>"
+            f"<p class=meta>models: primary={html.escape(str(models.get('primary','')))} · "
+            f"name escalation={html.escape(str(models.get('name_escalation','')))} · "
+            f"date={html.escape(str(meta.get('enumeration_date','?')))}</p>"
+            f"<p class=meta>fixture score: <b>{correct}/{tot}</b> on the marquee cells · "
+            f"{n_escalated} name cells escalated to Fable · "
+            f"{n_low} name cells at LOW confidence</p>"
+            f"<p class='meta legend'>"
+            f"<span style='background:#e6f5d9;padding:0 4px'>green</span> = fixture cell PASS "
+            f"<span style='background:#fbe6e6;padding:0 4px'>red</span> = fixture cell FAIL "
+            f"<span class=badge-fable>FABLE</span> = escalated · "
+            f"<span class=badge-low>LOW</span>/<span class=badge-med>MED</span> = confidence · "
+            f"<span class=badge-rev>⚑</span> = needs_review</p>")
+    css = VIEW_CSS + """<style>
+     .pipeline_v2 td.pass{background:#e6f5d9}
+     .pipeline_v2 td.fail{background:#fbe6e6}
+     .badges{margin-top:2px}
+     .badge-fable{background:#4a3aa8;color:white;font-size:10px;padding:1px 4px;border-radius:3px;font-weight:600}
+     .badge-low{background:#a03000;color:white;font-size:10px;padding:1px 4px;border-radius:3px;font-weight:600}
+     .badge-med{background:#a08000;color:white;font-size:10px;padding:1px 4px;border-radius:3px}
+     .badge-rev{background:#8a5a00;color:white;font-size:10px;padding:1px 4px;border-radius:3px}
+     .opus-orig{font-size:10px;color:#666;font-style:italic;margin-top:2px}
+     .missing td{background:#f6f6f6;color:#999}
+    </style>"""
+    return (css + "<div class=wrap><h1>Scriptorium — pipeline_v2</h1>"
+            "<p><a href='/'>&larr; API playground</a> &middot; "
+            "<a href='/view'>consensus view</a> &middot; "
+            "<a href='/pipeline_v2' style='font-weight:600'>pipeline_v2</a></p>"
+            f"<p class=nav>Frames: {nav}</p>{partial_nav}{head}"
+            f"<div class='tablewrap pipeline_v2'><table><thead>"
+            f"<tr><th>Ln</th>{ths}</tr></thead>"
+            f"<tbody>{trs}</tbody></table></div></div>")
 
 
 if __name__ == "__main__":

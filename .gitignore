@@ -6,6 +6,8 @@ corpora/*/output/
 
 # Per-strategy scratch dirs (crop PNGs + results.json — regenerable)
 src/strategies/_*/
+# Experiment scratch dirs (crop PNGs + results.json — regenerable)
+experiments/*/_out/
 
 # Python / venv
 __pycache__/
